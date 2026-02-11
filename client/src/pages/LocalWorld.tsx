@@ -1,6 +1,6 @@
 /*
   Design Philosophy: Luminous Brutalism - LOCAL World
-  - Gallery: Grid 레이아웃 (규칙적, 안정감)
+  - Gallery: Card 레이아웃 (반응형, 세련됨)
   - Color: 오프화이트 배경 + 웜 그레이 텍스트
   - Interaction: Soft and Calm
 */
@@ -27,13 +27,16 @@ export default function LocalWorld() {
 
       {/* Hero Section */}
       <section className="relative h-[60vh] flex items-center justify-center overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage:
-              "url('https://private-us-east-1.manuscdn.com/sessionFile/OwKpbvpl0NtYLmWGBzoe20/sandbox/V2yV3OLI15hCHRCueCxfip-img-5_1770848609000_na1fn_aGVyb19sb2NhbF9iZw.png?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvT3dLcGJ2cGwwTnRZTG1XR0J6b2UyMC9zYW5kYm94L1YyeVYzT0xJMTVoQ0hSQ3VlQ3hmaXAtaW1nLTVfMTc3MDg0ODYwOTAwMF9uYTFmbl9hR1Z5YjE5c2IyTmhiRjlpWncucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLHdfMTkyMCxoXzE5MjAvZm9ybWF0LHdlYnAvcXVhbGl0eSxxXzgwIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzk4NzYxNjAwfX19XX0_&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=Sh1FrCSEygc1Lmml7pnnGeyZkEiiFpfsjp74f9jVXRsA5N501Nrm999pn8TNAUuP~2if3oOeQyH8QH83LN~lMXRKfAg1J8uy63GOo9jyaQ4qpxWdVtIe1c7hyOy2ukDxVH8hf2rPCK7~VgxZ~2E4zzCO2wh1TNCQWrOKYagez4~3fCI7r4hIBcOGCxDwbtM-gbABeWLX9qNbBddgWfMk~5kfYtSEaAwBkoTkDnzRJvW2n25YNpmAigUXrYE6Cm3iG2mORjTYbfky01oZPs9wS192ZfufPwf03T4DvgVH-eZQCLOXE416h0xeVnCJ1QpLt~DJVpyqKV-iIkay4I2URg__')",
-          }}
-        >
+        <div className="absolute inset-0">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="h-full w-full object-cover"
+          >
+            <source src="https://files.manuscdn.com/user_upload_by_module/session_file/91290999/CnGsOfsCLSNXSijg.mp4" type="video/mp4" />
+          </video>
           <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-transparent to-white/80" />
         </div>
 
@@ -67,33 +70,36 @@ export default function LocalWorld() {
             ))}
           </div>
 
-          {/* Artworks Grid */}
+          {/* Artworks Grid - Card Style */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredArtworks.map((artwork) => (
               <div
                 key={artwork.id}
-                className="group cursor-pointer bg-white overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500"
+                className="group cursor-pointer bg-white rounded-none overflow-hidden shadow-md hover:shadow-2xl transition-all duration-500 border border-gray-200"
                 onClick={() => setLocation(`/artwork/${artwork.id}`)}
               >
-                <div className="aspect-video overflow-hidden">
+                {/* Thumbnail with fixed 16:9 ratio */}
+                <div className="relative overflow-hidden aspect-video bg-gray-100">
                   <img
                     src={artwork.image}
                     alt={artwork.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
                 </div>
+
+                {/* Card Content */}
                 <div className="p-6">
-                  <h3 className="text-2xl font-display font-semibold text-gray-800 mb-2">
+                  <h3 className="text-xl font-display font-semibold text-gray-800 mb-2 line-clamp-1">
                     {artwork.title}
                   </h3>
-                  <p className="text-gray-600 font-body text-sm mb-4">
+                  <p className="text-gray-600 font-body text-sm mb-4 line-clamp-2">
                     {artwork.description}
                   </p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-accent text-gray-500">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-accent text-gray-500 uppercase">
                       {artwork.category}
                     </span>
-                    <span className="text-xs text-gray-400">
+                    <span className="text-gray-400">
                       {artwork.displayType} · {artwork.runtime}
                     </span>
                   </div>

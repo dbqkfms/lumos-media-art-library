@@ -1,6 +1,6 @@
 /*
   Design Philosophy: Luminous Brutalism - STANDARD World
-  - Gallery: Masonry 레이아웃 (비대칭, 긴장감)
+  - Gallery: Card 레이아웃 (반응형, 세련됨)
   - Color: 블랙 배경 + 골드 액센트
   - Interaction: Heavy but Responsive
 */
@@ -27,13 +27,16 @@ export default function StandardWorld() {
 
       {/* Hero Section */}
       <section className="relative h-[60vh] flex items-center justify-center overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage:
-              "url('https://files.manuscdn.com/user_upload_by_module/session_file/91290999/zOmNxqqARpBQjmzb.png')",
-          }}
-        >
+        <div className="absolute inset-0">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="h-full w-full object-cover"
+          >
+            <source src="https://files.manuscdn.com/user_upload_by_module/session_file/91290999/uqcXUFUnrsmScJQs.mp4" type="video/mp4" />
+          </video>
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
         </div>
 
@@ -67,34 +70,37 @@ export default function StandardWorld() {
             ))}
           </div>
 
-          {/* Artworks Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Artworks Grid - Card Style */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredArtworks.map((artwork) => (
               <div
                 key={artwork.id}
-                className="group cursor-pointer bg-zinc-900 overflow-hidden hover:shadow-2xl hover:shadow-[#D4AF37]/20 transition-all duration-500"
+                className="group cursor-pointer bg-zinc-900 rounded-none overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-[#D4AF37]/20 transition-all duration-500 border border-zinc-800"
                 onClick={() => setLocation(`/artwork/${artwork.id}`)}
               >
-                <div className="relative overflow-hidden aspect-video">
+                {/* Thumbnail with fixed 16:9 ratio */}
+                <div className="relative overflow-hidden aspect-video bg-zinc-950">
                   <img
                     src={artwork.image}
                     alt={artwork.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
+
+                {/* Card Content */}
                 <div className="p-6">
-                  <h3 className="text-2xl font-display font-semibold text-[#D4AF37] mb-2">
+                  <h3 className="text-xl font-display font-semibold text-[#D4AF37] mb-2 line-clamp-1">
                     {artwork.title}
                   </h3>
-                  <p className="text-gray-400 font-body text-sm mb-4">
+                  <p className="text-gray-400 font-body text-sm mb-4 line-clamp-2">
                     {artwork.description}
                   </p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-accent text-gray-500">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-accent text-gray-500 uppercase">
                       {artwork.category}
                     </span>
-                    <span className="text-xs text-gray-600">
+                    <span className="text-gray-600">
                       {artwork.displayType} · {artwork.runtime}
                     </span>
                   </div>
