@@ -90,7 +90,7 @@ export default function Home() {
                 프리미엄 미디어아트
               </p>
               <p className="text-sm md:text-base text-gray-200 mb-8 text-shadow-soft">
-                빛으로 완성하는 공간의 정체성. 랜드마크, 파사드, 갤러리를 위한 예술적 콘텐츠.
+                갤러리, 미술관, 럭셔리 공간을 위한 글로벌 스탠다드 콘텐츠. 보편적 아름다움으로 공간의 품격을 완성합니다.
               </p>
               <button className="btn-brutalist">
                 Explore STANDARD
@@ -133,10 +133,10 @@ export default function Home() {
                 LOCAL
               </h2>
               <p className="text-lg md:text-xl mb-4 text-gray-100 text-shadow-medium">
-                상업용 콘텐츠
+                한국적 상업용 콘텐츠
               </p>
               <p className="text-sm md:text-base text-gray-200 mb-8 text-shadow-soft">
-                일상에 스며드는 빛. 카페, 레스토랑, 상업공간을 위한 자연과 계절의 콘텐츠.
+                한국의 전통미와 자연을 담은 콘텐츠. 카페, 레스토랑, 호텔 등 일상 공간에 한국적 정서를 더합니다.
               </p>
               <button className="btn-brutalist border-white text-white hover:bg-white hover:text-black">
                 Explore LOCAL

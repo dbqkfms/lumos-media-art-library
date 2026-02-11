@@ -45,7 +45,7 @@ export default function StandardWorld() {
             STANDARD
           </h1>
           <p className="text-xl md:text-2xl text-white max-w-2xl mx-auto font-body drop-shadow-lg">
-            갤러리와 미술관을 위한 프리미엄 미디어아트
+            글로벌 스탠다드로 완성하는 프리미엄 공간
           </p>
         </div>
       </section>
@@ -71,7 +71,7 @@ export default function StandardWorld() {
           </div>
 
           {/* Artworks Grid - Card Style */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredArtworks.map((artwork) => (
               <div
                 key={artwork.id}
@@ -89,15 +89,15 @@ export default function StandardWorld() {
                 </div>
 
                 {/* Card Content */}
-                <div className="p-6">
-                  <h3 className="text-xl font-display font-semibold text-[#D4AF37] mb-2 line-clamp-1">
+                <div className="p-5">
+                  <h3 className="text-lg font-display font-semibold text-[#D4AF37] mb-1.5 line-clamp-1">
                     {artwork.title}
                   </h3>
-                  <p className="text-gray-400 font-body text-sm mb-4 line-clamp-2">
+                  <p className="text-gray-400 font-body text-xs mb-3 line-clamp-2 leading-relaxed">
                     {artwork.description}
                   </p>
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-accent text-gray-500 uppercase">
+                  <div className="flex items-center justify-between text-[10px]">
+                    <span className="font-accent text-gray-500 uppercase tracking-wider">
                       {artwork.category}
                     </span>
                     <span className="text-gray-600">

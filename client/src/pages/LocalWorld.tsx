@@ -71,7 +71,7 @@ export default function LocalWorld() {
           </div>
 
           {/* Artworks Grid - Card Style */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredArtworks.map((artwork) => (
               <div
                 key={artwork.id}
@@ -88,15 +88,15 @@ export default function LocalWorld() {
                 </div>
 
                 {/* Card Content */}
-                <div className="p-6">
-                  <h3 className="text-xl font-display font-semibold text-gray-800 mb-2 line-clamp-1">
+                <div className="p-5">
+                  <h3 className="text-lg font-display font-semibold text-gray-800 mb-1.5 line-clamp-1">
                     {artwork.title}
                   </h3>
-                  <p className="text-gray-600 font-body text-sm mb-4 line-clamp-2">
+                  <p className="text-gray-600 font-body text-xs mb-3 line-clamp-2 leading-relaxed">
                     {artwork.description}
                   </p>
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-accent text-gray-500 uppercase">
+                  <div className="flex items-center justify-between text-[10px]">
+                    <span className="font-accent text-gray-500 uppercase tracking-wider">
                       {artwork.category}
                     </span>
                     <span className="text-gray-400">
