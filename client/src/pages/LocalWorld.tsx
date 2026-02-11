@@ -35,16 +35,16 @@ export default function LocalWorld() {
             playsInline
             className="h-full w-full object-cover"
           >
-            <source src="https://files.manuscdn.com/user_upload_by_module/session_file/91290999/CnGsOfsCLSNXSijg.mp4" type="video/mp4" />
+            <source src="https://files.manuscdn.com/user_upload_by_module/session_file/91290999/wRyncDSflfQuQrwr.mp4" type="video/mp4" />
           </video>
-          <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-transparent to-white/80" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-white/80" />
         </div>
 
         <div className="relative z-10 text-center px-4">
-          <h1 className="text-7xl md:text-8xl font-display font-bold text-gray-800 mb-6 drop-shadow-lg">
+          <h1 className="text-7xl md:text-8xl font-display font-bold text-white mb-6 drop-shadow-2xl" style={{ textShadow: '0 0 40px rgba(0,0,0,0.8), 0 4px 20px rgba(0,0,0,0.9)' }}>
             LOCAL
           </h1>
-          <p className="text-xl md:text-2xl text-gray-700 max-w-2xl mx-auto font-body drop-shadow-md">
+          <p className="text-xl md:text-2xl text-white max-w-2xl mx-auto font-body drop-shadow-lg" style={{ textShadow: '0 0 30px rgba(0,0,0,0.8), 0 2px 15px rgba(0,0,0,0.9)' }}>
             한국의 전통미를 현대적으로 재해석한 상업용 미디어아트
           </p>
         </div>
