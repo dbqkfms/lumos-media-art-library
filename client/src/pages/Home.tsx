@@ -18,15 +18,17 @@ export default function Home() {
       <FloatingCTA />
       {/* Hero Section - 풀스크린 영상 배경 */}
       <section className="relative h-screen w-full overflow-hidden">
-        {/* Background - Animated Image (Video placeholder) */}
+        {/* Background - Video */}
         <div className="absolute inset-0">
-          <div className="relative h-full w-full overflow-hidden">
-            <img
-              src="https://files.manuscdn.com/user_upload_by_module/session_file/91290999/PHLFccawZZjMhvnA.png"
-              alt="LUMOS Hero"
-              className="h-full w-full object-cover opacity-60 animate-slow-zoom"
-            />
-          </div>
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="h-full w-full object-cover opacity-60"
+          >
+            <source src="https://files.manuscdn.com/user_upload_by_module/session_file/91290999/ndeHuHogaaKeFNpu.mp4" type="video/mp4" />
+          </video>
           {/* Overlay gradient */}
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
         </div>
@@ -64,13 +66,17 @@ export default function Home() {
           onClick={() => setLocation("/standard")}
           className="group relative flex-1 min-h-[50vh] md:min-h-screen overflow-hidden cursor-pointer light-trail"
         >
-          {/* Background Image */}
+          {/* Background Video */}
           <div className="absolute inset-0">
-          <img
-            src="https://files.manuscdn.com/user_upload_by_module/session_file/91290999/CsCdnLUHaWwRzGSO.png"
-            alt="STANDARD World"
-            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-          />
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+            >
+              <source src="https://files.manuscdn.com/user_upload_by_module/session_file/91290999/uqcXUFUnrsmScJQs.mp4" type="video/mp4" />
+            </video>
             <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-500" />
           </div>
 
@@ -106,13 +112,17 @@ export default function Home() {
           onClick={() => setLocation("/local")}
           className="group relative flex-1 min-h-[50vh] md:min-h-screen overflow-hidden cursor-pointer light-trail"
         >
-          {/* Background Image */}
+          {/* Background Video */}
           <div className="absolute inset-0">
-            <img
-              src="/local_sample_1_nature.jpg"
-              alt="LOCAL World"
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
               className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-            />
+            >
+              <source src="https://files.manuscdn.com/user_upload_by_module/session_file/91290999/CnGsOfsCLSNXSijg.mp4" type="video/mp4" />
+            </video>
             <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-colors duration-500" />
           </div>
 

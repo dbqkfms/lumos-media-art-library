@@ -67,17 +67,15 @@ export default function StandardWorld() {
             ))}
           </div>
 
-          {/* Artworks Masonry Grid */}
+          {/* Artworks Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredArtworks.map((artwork, index) => (
+            {filteredArtworks.map((artwork) => (
               <div
                 key={artwork.id}
-                className={`group cursor-pointer bg-zinc-900 overflow-hidden hover:shadow-2xl hover:shadow-[#D4AF37]/20 transition-all duration-500 ${
-                  index % 5 === 0 ? "lg:col-span-2 lg:row-span-2" : ""
-                }`}
+                className="group cursor-pointer bg-zinc-900 overflow-hidden hover:shadow-2xl hover:shadow-[#D4AF37]/20 transition-all duration-500"
                 onClick={() => setLocation(`/artwork/${artwork.id}`)}
               >
-                <div className="relative overflow-hidden aspect-[4/3]">
+                <div className="relative overflow-hidden aspect-video">
                   <img
                     src={artwork.image}
                     alt={artwork.title}
