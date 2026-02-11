@@ -121,7 +121,11 @@ const localPreviews: ArtworkPreview[] = [
 const standardCategories = ["All", "Abstract", "Cosmic", "Material", "Light", "Pattern"];
 const localCategories = ["All", "Nature", "Seasonal", "Urban", "Minimal"];
 
-export default function Header() {
+interface HeaderProps {
+  currentWorld?: "standard" | "local";
+}
+
+export default function Header({ currentWorld }: HeaderProps = {}) {
   const [location, setLocation] = useLocation();
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
 

@@ -7,6 +7,7 @@
 
 import { useLocation } from "wouter";
 import Header from "@/components/Header";
+import FloatingCTA from "@/components/FloatingCTA";
 
 export default function Home() {
   const [, setLocation] = useLocation();
@@ -14,6 +15,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-black text-white">
       <Header />
+      <FloatingCTA />
       {/* Hero Section - 풀스크린 영상 배경 */}
       <section className="relative h-screen w-full overflow-hidden">
         {/* Background - Animated Image (Video placeholder) */}

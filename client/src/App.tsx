@@ -7,6 +7,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import StandardWorld from "./pages/StandardWorld";
 import LocalWorld from "./pages/LocalWorld";
+import ArtworkDetail from "./pages/ArtworkDetail";
 
 function Router() {
   return (
@@ -14,6 +15,7 @@ function Router() {
       <Route path={"/"} component={Home} />
       <Route path={"/standard"} component={StandardWorld} />
       <Route path={"/local"} component={LocalWorld} />
+      <Route path={"/artwork/:id"} component={ArtworkDetail} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
