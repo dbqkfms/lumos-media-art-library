@@ -1,13 +1,16 @@
 /*
-  Artwork Detail Page
-  - Full-screen immersive experience
-  - Artwork information overlay
-  - Related artworks section
+  ArtworkDetail v2 — Immersive Dark Detail Page
+  - Full dark base for both STANDARD and LOCAL
+  - STANDARD accent: Gold (#D4A843)
+  - LOCAL accent: Blue (#93C5FD)
+  - Artwork display 1.5x larger
+  - Collapsible description (더보기/접기)
+  - All buttons functional
 */
 
 import { useEffect, useState } from "react";
 import { useLocation, useRoute } from "wouter";
-import { ArrowLeft, Play, Pause, Download, Share2 } from "lucide-react";
+import { ArrowLeft, Download, Share2, ChevronDown, ChevronUp } from "lucide-react";
 import Header from "@/components/Header";
 import { standardArtworks, type Artwork as StandardArtwork } from "@/data/standardArtworks";
 import { localArtworks, type Artwork as LocalArtwork } from "@/data/localArtworks";
@@ -19,20 +22,15 @@ export default function ArtworkDetail() {
   const [, params] = useRoute("/artwork/:id");
   const [, setLocation] = useLocation();
   const [artwork, setArtwork] = useState<Artwork | null>(null);
-  const [isPlaying, setIsPlaying] = useState(true);
   const [relatedArtworks, setRelatedArtworks] = useState<Artwork[]>([]);
+  const [descExpanded, setDescExpanded] = useState(false);
 
   useEffect(() => {
     if (!params?.id) return;
-
-    // Find artwork from both collections
     const allArtworks = [...standardArtworks, ...localArtworks];
     const found = allArtworks.find((art) => art.id === params.id);
-
     if (found) {
       setArtwork(found);
-
-      // Find related artworks (same category)
       const related = allArtworks
         .filter((art) => art.category === found.category && art.id !== found.id)
         .slice(0, 4);
@@ -42,12 +40,12 @@ export default function ArtworkDetail() {
 
   if (!artwork) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-3xl font-display text-white mb-4">작품을 찾을 수 없습니다</h2>
+          <h2 className="text-display text-3xl text-white mb-6">작품을 찾을 수 없습니다</h2>
           <button
             onClick={() => setLocation("/")}
-            className="px-6 py-3 bg-[#D4AF37] text-black font-accent text-sm hover:bg-[#F4D03F] transition-colors"
+            className="btn-brutalist"
           >
             홈으로 돌아가기
           </button>
@@ -57,10 +55,11 @@ export default function ArtworkDetail() {
   }
 
   const isStandard = artwork.id.startsWith("standard-");
-  const bgColor = isStandard ? "bg-black" : "bg-white";
-  const textColor = isStandard ? "text-white" : "text-gray-800";
-  const accentColor = isStandard ? "text-[#D4AF37]" : "text-gray-800";
-  const buttonBg = isStandard ? "bg-[#D4AF37] text-black" : "bg-gray-800 text-white";
+  const accentColor = isStandard ? "#D4A843" : "#93C5FD";
+  const accentClass = isStandard ? "text-[#D4A843]" : "text-[#93C5FD]";
+  const accentBg = isStandard ? "bg-[#D4A843]/10" : "bg-[#93C5FD]/10";
+  const borderAccent = isStandard ? "border-[#D4A843]/20" : "border-[#93C5FD]/20";
+  const btnClass = isStandard ? "btn-brutalist" : "btn-brutalist-blue";
 
   const handleDownload = () => {
     toast.success("다운로드 요청이 접수되었습니다. 곧 연락드리겠습니다.");
@@ -80,112 +79,99 @@ export default function ArtworkDetail() {
   };
 
   return (
-    <div className={`min-h-screen ${bgColor}`}>
+    <div className="min-h-screen bg-[#0a0a0a]">
       <Header currentWorld={isStandard ? "standard" : "local"} />
 
-      {/* Full-Screen Artwork Display */}
-      <section className="relative h-screen flex items-center justify-center">
-        {/* Artwork Image */}
-        <div className="absolute inset-0">
+      {/* ─── Full-Screen Artwork Display (1.5x larger) ─── */}
+      <section className="relative" style={{ minHeight: "90vh" }}>
+        {/* Artwork Image — fills full viewport height */}
+        <div className="relative w-full" style={{ height: "90vh" }}>
           <img
             src={artwork.image}
             alt={artwork.title}
-            className={`w-full h-full object-contain ${isPlaying ? "animate-slow-zoom" : ""}`}
+            className="w-full h-full object-contain bg-[#050505] animate-slow-zoom"
           />
-          <div
-            className={`absolute inset-0 ${
-              isStandard
-                ? "bg-gradient-to-b from-black/40 via-transparent to-black/60"
-                : "bg-gradient-to-b from-white/30 via-transparent to-white/50"
-            }`}
-          />
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/85 pointer-events-none" />
         </div>
 
         {/* Back Button */}
         <button
           onClick={() => window.history.back()}
-          className={`absolute top-24 left-8 z-20 flex items-center gap-2 px-4 py-2 ${
-            isStandard ? "bg-white/10 text-white" : "bg-black/10 text-gray-800"
-          } backdrop-blur-sm hover:bg-opacity-20 transition-all`}
+          className="absolute top-24 left-8 z-20 flex items-center gap-2 px-4 py-2.5 bg-white/5 backdrop-blur-sm border border-white/10 text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200"
         >
-          <ArrowLeft className="w-5 h-5" />
-          <span className="font-accent text-sm">뒤로</span>
+          <ArrowLeft className="w-4 h-4" />
+          <span className="font-accent text-xs tracking-widest">뒤로</span>
         </button>
 
-        {/* Artwork Info Overlay */}
-        <div className="absolute bottom-0 left-0 right-0 z-10 p-8 md:p-12">
-          <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Artwork Info Overlay — bottom */}
+        <div className="absolute bottom-0 left-0 right-0 z-10 px-8 md:px-16 pb-12">
+          <div className="max-w-screen-xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-end">
               {/* Left: Title & Description */}
-              <div>
-                <span className={`text-sm font-accent ${accentColor} mb-2 block`}>
+              <div className="md:col-span-2">
+                <span className={`font-accent text-xs tracking-widest ${accentClass} mb-3 block`}>
                   {artwork.category}
                 </span>
-                <h1 className={`text-5xl md:text-6xl font-display font-bold ${textColor} mb-4`}>
+                <h1 className="text-display text-[3rem] md:text-[4.5rem] leading-none text-white mb-6 text-shadow-strong">
                   {artwork.title}
                 </h1>
-                <p className={`text-lg ${textColor} opacity-90 font-body mb-6`}>
-                  {artwork.description}
-                </p>
+
+                {/* Collapsible Description */}
+                <div className="mb-8">
+                  <p className={`text-gray-300 leading-relaxed text-shadow-soft ${!descExpanded ? "line-clamp-2" : ""}`}>
+                    {artwork.description}
+                  </p>
+                  <button
+                    onClick={() => setDescExpanded(!descExpanded)}
+                    className={`flex items-center gap-1.5 mt-3 font-accent text-xs tracking-widest ${accentClass} hover:opacity-80 transition-opacity`}
+                  >
+                    {descExpanded ? (
+                      <>접기 <ChevronUp className="w-3.5 h-3.5" /></>
+                    ) : (
+                      <>더보기 <ChevronDown className="w-3.5 h-3.5" /></>
+                    )}
+                  </button>
+                </div>
 
                 {/* Action Buttons */}
-                <div className="flex flex-wrap gap-4">
-                  <button
-                    onClick={() => setIsPlaying(!isPlaying)}
-                    className={`flex items-center gap-2 px-6 py-3 ${buttonBg} font-accent text-sm hover:opacity-80 transition-opacity`}
-                  >
-                    {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                    {isPlaying ? "일시정지" : "재생"}
-                  </button>
+                <div className="flex flex-wrap gap-3">
                   <button
                     onClick={handleDownload}
-                    className={`flex items-center gap-2 px-6 py-3 ${
-                      isStandard ? "bg-white/10 text-white" : "bg-black/10 text-gray-800"
-                    } backdrop-blur-sm font-accent text-sm hover:bg-opacity-20 transition-all`}
+                    className={btnClass}
                   >
-                    <Download className="w-4 h-4" />
-                    다운로드 문의
+                    <span className="flex items-center gap-2">
+                      <Download className="w-3.5 h-3.5" />
+                      다운로드 문의
+                    </span>
                   </button>
                   <button
                     onClick={handleShare}
-                    className={`flex items-center gap-2 px-6 py-3 ${
-                      isStandard ? "bg-white/10 text-white" : "bg-black/10 text-gray-800"
-                    } backdrop-blur-sm font-accent text-sm hover:bg-opacity-20 transition-all`}
+                    className="flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/10 text-gray-300 font-accent text-xs tracking-widest hover:bg-white/10 hover:text-white transition-all duration-200"
                   >
-                    <Share2 className="w-4 h-4" />
+                    <Share2 className="w-3.5 h-3.5" />
                     공유
                   </button>
                 </div>
               </div>
 
               {/* Right: Specifications */}
-              <div
-                className={`${
-                  isStandard ? "bg-white/5" : "bg-black/5"
-                } backdrop-blur-sm p-6 self-start`}
-              >
-                <h3 className={`text-xl font-display font-semibold ${textColor} mb-4`}>
+              <div className={`bg-black/60 backdrop-blur-md p-6 border ${borderAccent}`}>
+                <h3 className={`font-accent text-xs tracking-widest ${accentClass} mb-5`}>
                   작품 정보
                 </h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className={`font-body text-sm ${textColor} opacity-70`}>해상도</span>
-                    <span className={`font-body text-sm ${textColor}`}>{artwork.resolution}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className={`font-body text-sm ${textColor} opacity-70`}>재생 시간</span>
-                    <span className={`font-body text-sm ${textColor}`}>{artwork.runtime}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className={`font-body text-sm ${textColor} opacity-70`}>디스플레이</span>
-                    <span className={`font-body text-sm ${textColor}`}>
-                      {artwork.displayType}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className={`font-body text-sm ${textColor} opacity-70`}>카테고리</span>
-                    <span className={`font-body text-sm ${textColor}`}>{artwork.category}</span>
-                  </div>
+                <div className="space-y-4">
+                  {[
+                    { label: "해상도", value: artwork.resolution },
+                    { label: "재생 시간", value: artwork.runtime },
+                    { label: "디스플레이", value: artwork.displayType },
+                    { label: "카테고리", value: artwork.category },
+                  ].map(({ label, value }) => (
+                    <div key={label} className="flex justify-between items-center">
+                      <span className="text-xs text-gray-600 font-accent tracking-wider">{label}</span>
+                      <span className="text-sm text-gray-200">{value}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -193,34 +179,43 @@ export default function ArtworkDetail() {
         </div>
       </section>
 
-      {/* Related Artworks */}
+      {/* ─── Related Artworks ─── */}
       {relatedArtworks.length > 0 && (
-        <section className={`py-20 px-4 md:px-8 ${isStandard ? "bg-zinc-900" : "bg-gray-50"}`}>
-          <div className="max-w-7xl mx-auto">
-            <h2 className={`text-4xl font-display font-bold ${textColor} mb-12 text-center`}>
-              관련 작품
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <section className="py-24 px-8 md:px-16 bg-[#0f0f0f] border-t border-white/5">
+          <div className="max-w-screen-xl mx-auto">
+            <div className="mb-12">
+              <p className={`font-accent text-xs tracking-[0.3em] ${accentClass} mb-4`}>
+                RELATED WORKS
+              </p>
+              <h2 className="text-display text-[2rem] md:text-[3rem] text-white leading-tight">
+                관련 작품
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {relatedArtworks.map((related) => (
                 <div
                   key={related.id}
-                  className="group cursor-pointer overflow-hidden hover:shadow-2xl transition-all duration-500"
+                  className={`gallery-card ${isStandard ? "gallery-card-standard" : "gallery-card-local"}`}
                   onClick={() => setLocation(`/artwork/${related.id}`)}
                 >
-                  <div className="aspect-[4/3] overflow-hidden">
+                  <div className="aspect-[4/3] overflow-hidden bg-[#111]">
                     <img
                       src={related.image}
                       alt={related.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      className="w-full h-full object-cover transition-transform duration-500"
+                      loading="lazy"
                     />
                   </div>
-                  <div className={`p-4 ${isStandard ? "bg-black" : "bg-white"}`}>
-                    <h3 className={`text-lg font-display font-semibold ${textColor} mb-1`}>
+                  <div className="px-3.5 py-3">
+                    <h3 className="text-sm font-semibold text-white leading-tight line-clamp-1 mb-2">
                       {related.title}
                     </h3>
-                    <p className={`text-xs font-accent ${textColor} opacity-60`}>
+                    <span
+                      className={`inline-block font-accent text-[10px] tracking-widest ${accentClass} ${accentBg} px-2 py-0.5`}
+                    >
                       {related.category}
-                    </p>
+                    </span>
                   </div>
                 </div>
               ))}
@@ -228,6 +223,14 @@ export default function ArtworkDetail() {
           </div>
         </section>
       )}
+
+      {/* Footer */}
+      <footer className="py-12 px-12 md:px-20 border-t border-white/5 bg-[#0a0a0a]">
+        <div className="max-w-screen-xl mx-auto flex items-center justify-between">
+          <p className="font-display text-lg text-[#D4A843]">LUMOS</p>
+          <p className="text-xs text-gray-700">© 2025 LUMOS. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   );
 }
