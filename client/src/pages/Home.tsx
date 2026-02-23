@@ -1,41 +1,16 @@
 /*
-  Home Page v3 — Hight-end Media Art Showroom
-  - Hero: Fullscreen video loop + "Light, Redefined" copy
-  - World Selection: Vertical Split 50/50
-  - Atmosphere Scenarios: 4 cards with user-provided images + ambient lighting
-  - Footer
+  Home Page v2 — Premium Media Art Brand
+  - Hero: Fullscreen video loop (placeholder if no video)
+  - World Selection: Vertical Split 50/50, dark base
+  - Case Studies: Dark cards
 */
 
-import { useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import Header from "@/components/Header";
 import FloatingCTA from "@/components/FloatingCTA";
 
 export default function Home() {
   const [, setLocation] = useLocation();
-
-  // Fade-up scroll observer
-  const fadeRefs = useRef<(HTMLElement | null)[]>([]);
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    fadeRefs.current.forEach((el) => {
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
-  }, []);
-
-  const addFadeRef = (el: HTMLElement | null, index: number) => {
-    fadeRefs.current[index] = el;
-  };
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
@@ -55,13 +30,17 @@ export default function Home() {
           >
             <source src="https://files.manuscdn.com/user_upload_by_module/session_file/91290999/ndeHuHogaaKeFNpu.mp4" type="video/mp4" />
           </video>
+          {/* Fallback: video area placeholder */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="w-full h-full bg-gradient-to-br from-[#0a0a0a] via-[#111] to-[#0a0a0a] opacity-0" />
+          </div>
           {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/90" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-transparent" />
         </div>
 
         {/* Hero Content — bottom-left */}
-        <div className="absolute bottom-0 left-0 w-full px-12 pb-20 md:px-20 md:pb-28">
+        <div className="absolute bottom-0 left-0 w-full px-12 pb-20 md:px-20 md:pb-24">
           <div className="max-w-3xl">
             <p className="font-accent text-xs tracking-[0.3em] text-[#D4A843] mb-6 opacity-90">
               LED MEDIA ART LIBRARY
@@ -69,18 +48,12 @@ export default function Home() {
             <h1 className="text-display text-[5.5rem] md:text-[8rem] leading-[0.9] mb-8 text-shadow-strong offset-text">
               LUMOS
             </h1>
-            <p className="text-2xl md:text-3xl font-light text-gray-100 mb-4 text-shadow-medium tracking-wide" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: "italic" }}>
+            <p className="text-xl md:text-2xl font-light text-gray-200 mb-3 text-shadow-medium tracking-wide">
               Light, Redefined.
             </p>
-            <p className="text-sm md:text-base text-gray-400 max-w-lg text-shadow-soft leading-relaxed mb-10">
-              AI가 만든 미디어아트로 공간에 생명을 불어넣습니다
+            <p className="text-base md:text-lg text-gray-200 max-w-xl text-shadow-soft leading-relaxed font-medium">
+              설치 다음 날부터 바뀝니다. 콘텐츠는 LUMOS가 채웁니다.
             </p>
-            <button
-              onClick={() => setLocation("/standard")}
-              className="btn-brutalist"
-            >
-              컬렉션 보기 →
-            </button>
           </div>
         </div>
 
@@ -185,160 +158,110 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── Atmosphere Scenarios Section ─── */}
+      {/* ─── Case Studies Section ─── */}
       <section className="relative py-36 px-12 md:px-20 bg-[#0a0a0a]">
         <div className="max-w-screen-xl mx-auto">
-          {/* Section Header */}
-          <div
-            className="mb-20 fade-up"
-            ref={(el) => addFadeRef(el, 0)}
-          >
+          <div className="mb-20">
             <p className="font-accent text-xs tracking-[0.3em] text-[#D4A843] mb-6">
-              ATMOSPHERE SCENARIOS
+              CASE STUDIES
             </p>
             <h2 className="text-display text-[3rem] md:text-[4.5rem] leading-tight">
-              공간 시나리오<br />— 빛이 완성하는 장면들
+              LUMOS가 빛으로<br />완성한 공간들
             </h2>
-            <p className="text-sm text-gray-500 mt-6 max-w-xl leading-relaxed">
-              LUMOS의 미디어아트는 공간의 성격을 재정의합니다.
-              전통과 현대, 자연과 상상이 하나의 빛으로 역어내는 순간.
-            </p>
           </div>
 
-          {/* Scenarios Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-            {/* Scenario 1 — Korean Tradition Reimagined */}
-            <div
-              className="scenario-card scenario-card-gold group cursor-pointer fade-up"
-              ref={(el) => addFadeRef(el, 1)}
-            >
-              {/* Ambient overlay — warm gold */}
-              <div
-                className="ambient-overlay"
-                style={{ background: "radial-gradient(ellipse at center, rgba(212,168,67,0.15) 0%, transparent 70%)" }}
-              />
-              <div className="relative aspect-[16/10] overflow-hidden bg-[#111]">
+            {/* Case 1 */}
+            <div className="group relative overflow-hidden light-trail">
+              <div className="relative aspect-[4/3] overflow-hidden bg-[#111]">
                 <img
-                  src="/assets/scenario-korean-tradition.png"
-                  alt="Korean Tradition Reimagined — 3D Media Art"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                  src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=1920"
+                  alt="호텔 로비 사례"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-108"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
               </div>
-              <div className="absolute bottom-0 left-0 right-0 p-8 z-10">
+              <div className="absolute bottom-0 left-0 right-0 p-8">
                 <span className="font-accent text-[10px] tracking-widest text-[#D4A843]">
-                  PREMIUM EXHIBITION
+                  Luxury Hotel
                 </span>
                 <h3 className="text-display text-2xl mt-3 mb-3 text-white">
-                  Korean Tradition Reimagined
+                  호텔 로비 LED 파사드
                 </h3>
                 <p className="text-sm text-gray-400 leading-relaxed">
-                  한국의 전통 미학과 AI 생성 예술의 융합. 8K 렌더링으로 재해석한
-                  산수화와 연소의 움직임이 공간을 압도합니다.
+                  프리미엄 미디어아트로 호텔의 정체성을 표현. 우주와 추상의 조화.
                 </p>
               </div>
             </div>
 
-            {/* Scenario 2 — Nature & Ink */}
-            <div
-              className="scenario-card scenario-card-green group cursor-pointer fade-up"
-              ref={(el) => addFadeRef(el, 2)}
-              style={{ transitionDelay: "0.1s" }}
-            >
-              {/* Ambient overlay — green */}
-              <div
-                className="ambient-overlay"
-                style={{ background: "radial-gradient(ellipse at center, rgba(134,239,172,0.12) 0%, transparent 70%)" }}
-              />
-              <div className="relative aspect-[16/10] overflow-hidden bg-[#111]">
+            {/* Case 2 */}
+            <div className="group relative overflow-hidden light-trail">
+              <div className="relative aspect-[4/3] overflow-hidden bg-[#111]">
                 <img
-                  src="/assets/scenario-nature-forest.png"
-                  alt="Nature & Ink — Immersive Forest"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                  src="https://images.unsplash.com/photo-1554907984-15263bfd63bd?w=1920"
+                  alt="갤러리 사례"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-108"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
               </div>
-              <div className="absolute bottom-0 left-0 right-0 p-8 z-10">
-                <span className="font-accent text-[10px] tracking-widest text-[#86EFAC]">
-                  NATURE IMMERSIVE
+              <div className="absolute bottom-0 left-0 right-0 p-8">
+                <span className="font-accent text-[10px] tracking-widest text-[#D4A843]">
+                  Art Gallery
                 </span>
                 <h3 className="text-display text-2xl mt-3 mb-3 text-white">
-                  Nature &amp; Ink — 산수화의 세계
+                  현대미술관 미디어 설치
                 </h3>
                 <p className="text-sm text-gray-400 leading-relaxed">
-                  살아있는 자연과 수묵화의 붓이 겹치는 공간.
-                  새와 사슴이 스크린을 걸어 나오는 머물림의 순간.
+                  기하학적 패턴과 빛의 예술. 갤러리 공간에 생명을 불어넣다.
                 </p>
               </div>
             </div>
 
-            {/* Scenario 3 — Dragon & Ocean */}
-            <div
-              className="scenario-card scenario-card-teal group cursor-pointer fade-up"
-              ref={(el) => addFadeRef(el, 3)}
-              style={{ transitionDelay: "0.05s" }}
-            >
-              {/* Ambient overlay — teal */}
-              <div
-                className="ambient-overlay"
-                style={{ background: "radial-gradient(ellipse at center, rgba(94,234,212,0.12) 0%, transparent 70%)" }}
-              />
-              <div className="relative aspect-[16/10] overflow-hidden bg-[#111]">
+            {/* Case 3 */}
+            <div className="group relative overflow-hidden">
+              <div className="relative aspect-[4/3] overflow-hidden bg-[#111]">
                 <img
-                  src="/assets/scenario-dragon-ocean.png"
-                  alt="Dragon & Ocean — Mythic Underwater"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                  src="/local_sample_1_nature.jpg"
+                  alt="카페 사례"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-108"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
               </div>
-              <div className="absolute bottom-0 left-0 right-0 p-8 z-10">
-                <span className="font-accent text-[10px] tracking-widest text-[#5EEAD4]">
-                  MYTHIC EXPERIENCE
+              <div className="absolute bottom-0 left-0 right-0 p-8">
+                <span className="font-accent text-[10px] tracking-widest text-[#93C5FD]">
+                  Cafe
                 </span>
                 <h3 className="text-display text-2xl mt-3 mb-3 text-white">
-                  용의 바다 — 신화적 수중 세계
+                  봄날 벚꽃 카페
                 </h3>
                 <p className="text-sm text-gray-400 leading-relaxed">
-                  동양화의 용과 형광색 산호초가 공존하는 환상적 해저.
-                  수묵화의 담대함과 생명력이 시스템 전체를 가득 씁니다.
+                  계절의 변화를 담은 자연 콘텐츠. 평화로운 분위기 연출.
                 </p>
               </div>
             </div>
 
-            {/* Scenario 4 — Gwanghwamun Night */}
-            <div
-              className="scenario-card scenario-card-gold group cursor-pointer fade-up"
-              ref={(el) => addFadeRef(el, 4)}
-              style={{ transitionDelay: "0.15s" }}
-            >
-              {/* Ambient overlay — warm lantern gold */}
-              <div
-                className="ambient-overlay"
-                style={{ background: "radial-gradient(ellipse at center, rgba(251,191,36,0.12) 0%, transparent 70%)" }}
-              />
-              <div className="relative aspect-[16/10] overflow-hidden bg-[#111]">
+            {/* Case 4 */}
+            <div className="group relative overflow-hidden">
+              <div className="relative aspect-[4/3] overflow-hidden bg-[#111]">
                 <img
-                  src="/assets/scenario-gwanghwamun.png"
-                  alt="Gwanghwamun Night Festival"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                  src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920"
+                  alt="오피스 사례"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-108"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
               </div>
-              <div className="absolute bottom-0 left-0 right-0 p-8 z-10">
-                <span className="font-accent text-[10px] tracking-widest text-[#FCD34D]">
-                  HERITAGE &amp; LIGHT
+              <div className="absolute bottom-0 left-0 right-0 p-8">
+                <span className="font-accent text-[10px] tracking-widest text-[#D4A843]">
+                  Corporate Office
                 </span>
                 <h3 className="text-display text-2xl mt-3 mb-3 text-white">
-                  광화문 나이트 페스티벌
+                  기업 로비 미디어월
                 </h3>
                 <p className="text-sm text-gray-400 leading-relaxed">
-                  조선의 역사적 유산이 빛과 영상으로 환생되는 순간.
-                  전통 건축과 디지털 연출의 시낭적 융합.
+                  기업 아이덴티티를 시각화한 미디어아트. 브랜드 가치를 공간으로.
                 </p>
               </div>
             </div>
-
           </div>
         </div>
       </section>
