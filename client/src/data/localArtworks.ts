@@ -9,12 +9,88 @@ export interface Artwork {
   description: string;
   category: string;
   image: string;
+  videoSrc?: string;
   displayType: "Horizontal" | "Vertical";
   runtime: string;
   resolution: string;
+  tags?: string[];
 }
 
 export const localArtworks: Artwork[] = [
+  // ─── 실제 영상 작품 (업로드) ───────────────────────────────────────────
+  {
+    id: "local-sansu",
+    title: "산수 (山水)",
+    description: "먹과 채색이 어우러진 전통 산수화. 산과 강, 나무의 조화가 공간에 고요한 품격을 더합니다.",
+    category: "Traditional",
+    image: "",
+    videoSrc: "/videos/local/sansu.mp4",
+    displayType: "Horizontal",
+    runtime: "8 seconds loop",
+    resolution: "1280x720 (HD)",
+    tags: ["#전통", "#산수화", "#수묵", "#자연", "#가로형"],
+  },
+  {
+    id: "local-mukhyang",
+    title: "묵향 (墨香)",
+    description: "이젤 위 캔버스에 피어나는 수묵 산수. 붓이 닿는 순간 공간이 완성되는 과정을 담았습니다.",
+    category: "Traditional",
+    image: "",
+    videoSrc: "/videos/local/mukhyang.mp4",
+    displayType: "Horizontal",
+    runtime: "8 seconds loop",
+    resolution: "1280x720 (HD)",
+    tags: ["#전통", "#수묵", "#산수화", "#붓", "#가로형"],
+  },
+  {
+    id: "local-hexa-orb",
+    title: "헥사 오브 (Hexa Orb)",
+    description: "육각형 구조체가 빛을 품고 회전하는 미래적 오브제. 기업 로비와 전시 공간에 강렬한 존재감을 부여합니다.",
+    category: "Nature",
+    image: "",
+    videoSrc: "/videos/local/hexa-orb.mp4",
+    displayType: "Horizontal",
+    runtime: "8 seconds loop",
+    resolution: "1280x720 (HD)",
+    tags: ["#현대", "#3D", "#청록", "#기하학", "#가로형"],
+  },
+  {
+    id: "local-baekran",
+    title: "백란 (白蘭)",
+    description: "검은 대리석 위에 피어난 흰 난초. 절제된 아름다움이 고급 공간의 품격을 완성합니다.",
+    category: "Nature",
+    image: "",
+    videoSrc: "/videos/local/baekran.mp4",
+    displayType: "Vertical",
+    runtime: "8 seconds loop",
+    resolution: "1280x720 (HD)",
+    tags: ["#자연", "#난초", "#정물", "#세로형", "#우아한"],
+  },
+  {
+    id: "local-changsal",
+    title: "창살 빛 (窓光)",
+    description: "전통 창살 문양을 현대적 3D로 재해석. 공간 중앙에서 빛을 발산하며 전통과 미래를 잇습니다.",
+    category: "Traditional",
+    image: "",
+    videoSrc: "/videos/local/changsal.mp4",
+    displayType: "Horizontal",
+    runtime: "8 seconds loop",
+    resolution: "1280x720 (HD)",
+    tags: ["#전통", "#문양", "#3D", "#청록", "#가로형"],
+  },
+  {
+    id: "local-naseon",
+    title: "나선 (螺旋)",
+    description: "청록과 보라빛 에너지가 나선을 그리며 상승합니다. 역동적인 생명력이 공간을 가득 채웁니다.",
+    category: "Nature",
+    image: "",
+    videoSrc: "/videos/local/naseon.mp4",
+    displayType: "Vertical",
+    runtime: "8 seconds loop",
+    resolution: "1280x720 (HD)",
+    tags: ["#현대", "#나선", "#에너지", "#보라", "#세로형"],
+  },
+  // ─── 기존 작품 (이미지) ───────────────────────────────────────────────
   {
     id: "local-crane",
     title: "학의 비상",
@@ -24,6 +100,7 @@ export const localArtworks: Artwork[] = [
     displayType: "Horizontal",
     runtime: "60 seconds loop",
     resolution: "3840x2160 (4K UHD)",
+    tags: ["#전통", "#학", "#자연", "#가로형"],
   },
   {
     id: "local-kite",
@@ -34,6 +111,7 @@ export const localArtworks: Artwork[] = [
     displayType: "Horizontal",
     runtime: "45 seconds loop",
     resolution: "3840x2160 (4K UHD)",
+    tags: ["#전통", "#연", "#계절", "#가로형"],
   },
   {
     id: "local-plum",
@@ -44,6 +122,7 @@ export const localArtworks: Artwork[] = [
     displayType: "Horizontal",
     runtime: "90 seconds loop",
     resolution: "3840x2160 (4K UHD)",
+    tags: ["#계절", "#매화", "#자연", "#가로형"],
   },
   {
     id: "local-dancheong",
@@ -54,16 +133,18 @@ export const localArtworks: Artwork[] = [
     displayType: "Horizontal",
     runtime: "120 seconds loop",
     resolution: "3840x2160 (4K UHD)",
+    tags: ["#전통", "#단청", "#문양", "#가로형"],
   },
   {
     id: "local-fan",
     title: "부채의 우아함",
-    description: "섬세한 꽃 문양이 그려진 전통 부채. 부드러운 파스텔 톤(복숭아, 민트, 라벤더)과 은은한 빛 효과로 세련되고 고급스러운 분위기를 연출합니다. 부티크, 갤러리, 호텔 객실에 적합합니다.",
+    description: "섬세한 꽃 문양이 그려진 전통 부채. 부드러운 파스텔 톤과 은은한 빛 효과로 세련되고 고급스러운 분위기를 연출합니다. 부티크, 갤러리, 호텔 객실에 적합합니다.",
     category: "Traditional",
     image: "https://private-us-east-1.manuscdn.com/sessionFile/OwKpbvpl0NtYLmWGBzoe20/sandbox/niPQwavTkd7ybijPcoH9Yh-img-5_1770848531000_na1fn_bG9jYWxfYXJ0X2Zhbg.png?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvT3dLcGJ2cGwwTnRZTG1XR0J6b2UyMC9zYW5kYm94L25pUFF3YXZUa2Q3eWJpalBjb0g5WWgtaW1nLTVfMTc3MDg0ODUzMTAwMF9uYTFmbl9iRzlqWVd4ZllYSjBYMlpoYmcucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLHdfMTkyMCxoXzE5MjAvZm9ybWF0LHdlYnAvcXVhbGl0eSxxXzgwIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzk4NzYxNjAwfX19XX0_&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=OfqwTQc7FQYB8ESkBwA-jYryNEZeCZ5V57yhjRXEUC-Ahj18mPBJihLtbblt6YCoCTH5njjnPJGtoLcTD5lAyJzPycY8rENZMLymm31TA82kgr4rynjCFeCBZkoymrvhktkcjsmI64~PwYPRzjxNps5lcS37YUowxkuEwxnu4Z3f-1RGXnSp0mVD5loGxKXB5FzjT0tg8H4KucPjllp8HpYraMnlfaC4T5Bue6Oo2rIf8XlJLq3mJz2hhm7Qxjsp6r1Kqws87QdmgZeCydcFVLwjjjwq7srf8FOYi6P2qkEEYmxpQQVnzrDCdDCjkecCxwSmgehbEO6L4porV-Of7Q__",
     displayType: "Horizontal",
     runtime: "75 seconds loop",
     resolution: "3840x2160 (4K UHD)",
+    tags: ["#전통", "#부채", "#문양", "#가로형"],
   },
   {
     id: "local-hanbok",
@@ -74,6 +155,7 @@ export const localArtworks: Artwork[] = [
     displayType: "Horizontal",
     runtime: "60 seconds loop",
     resolution: "3840x2160 (4K UHD)",
+    tags: ["#전통", "#한복", "#가로형"],
   },
   {
     id: "local-lotus",
@@ -84,6 +166,7 @@ export const localArtworks: Artwork[] = [
     displayType: "Horizontal",
     runtime: "90 seconds loop",
     resolution: "3840x2160 (4K UHD)",
+    tags: ["#자연", "#연꽃", "#가로형"],
   },
   {
     id: "local-bamboo",
@@ -94,16 +177,18 @@ export const localArtworks: Artwork[] = [
     displayType: "Horizontal",
     runtime: "120 seconds loop",
     resolution: "3840x2160 (4K UHD)",
+    tags: ["#자연", "#대나무", "#세로형"],
   },
   {
     id: "local-moon",
     title: "보름달과 정자",
     description: "은은한 보름달과 한국 전통 정자의 실루엣. 부드러운 파란색과 은색 톤으로 몽환적이고 평화로운 분위기를 연출하는 미디어아트입니다. 한옥 스테이, 전통 문화 공간에 적합합니다.",
     category: "Traditional",
-    image: "https://private-us-east-1.manuscdn.com/sessionFile/OwKpbvpl0NtYLmWGBzoe20/sandbox/V2yV3OLI15hCHRCueCxfip-img-4_1770848621000_na1fn_bG9jYWxfYXJ0X21vb24.png?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvT3dLcGJ2cGwwTnRZTG1XR0J6b2UyMC9zYW5kYm94L1YyeVYzT0xJMTVoQ0hSQ3VlQ3hmaXAtaW1nLTRfMTc3MDg0ODYyMTAwMF9uYTFmbl9iRzlqWVd4ZllYSjBYMjF2YjI0LnBuZz94LW9zcy1wcm9jZXNzPWltYWdlL3Jlc2l6ZSx3XzE5MjAsaF8xOTIwL2Zvcm1hdCx3ZWJwL3F1YWxpdHkscV84MCIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc5ODc2MTYwMH19fV19&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=qXe-UR5rYrM8T4zunwn4PuaglJGPtbybJnyYjNeztc3jqnKgllYr-Lq74NP8FeNFJZ9Z8nbDF4lMxd0j1jP8Sw4xT4EfP2671iuDNeZHVZYpzg4K9afMwb~YaItHiw~tkYT4eC9YIL~PsNMrFoSKJ04bYFlqGhk2mnOXqJe5o6dVC27Pf5GTpD21orKkQvfc61nXI~8ru6xMEuhomV3gav~YTF9mXLZHJGs-O3qF3~v3kJ5gdy01U7w2BKXB0nJ4~S8JHMQecs~Q7eDm~1UNRbUCx7qOAvONmcR4v6NgCtHoAaeiH1B8MRJCmQF81AciCqTdfdc3zo73ZXQruRuovQ__",
+    image: "https://private-us-east-1.manuscdn.com/sessionFile/OwKpbvpl0NtYLmWGBzoe20/sandbox/V2yV3OLI15hCHRCueCxfip-img-4_1770848621000_na1fn_bG9jYWxfYXJ0X21vb24.png?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvT3dLcGJ2cGwwTnRZTG1XR0J6b2UyMC9zYW5kYm94L1YyeVYzT0xJMTVoQ0hSQ3VlQ3hmaXAtaW1nLTRfMTc3MDg0ODYyMTAwMF9uYTFmbl9iRzlqWVd4ZllYSjBYMjF2YjI0LnBuZz94LW9zcy1wcm9jZXNzPWltYWdlL3Jlc2l6ZSx3XzE5MjAsaF8xOTIwL2Zvcm1hdCx3ZWJwL3F1YWxpdHkscV84MCIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc5ODc2MTYwMH19fV19&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=qXe-UR5rYrM8T4zunwn4PuaglJGPtbybJnyYjNeztc3jqnKgllYT-Lq74NP8FeNFJZ9Z8nbDF4lMxd0j1jP8Sw4xT4EfP2671iuDNeZHVZYpzg4K9afMwb~YaItHiw~tkYT4eC9YIL~PsNMrFoSKJ04bYFlqGhk2mnOXqJe5o6dVC27Pf5GTpD21orKkQvfc61nXI~8ru6xMEuhomV3gav~YTF9mXLZHJGs-O3qF3~v3kJ5gdy01U7w2BKXB0nJ4~S8JHMQecs~Q7eDm~1UNRbUCx7qOAvONmcR4v6NgCtHoAaeiH1B8MRJCmQF81AciCqTdfdc3zo73ZXQruRuovQ__",
     displayType: "Horizontal",
     runtime: "75 seconds loop",
     resolution: "3840x2160 (4K UHD)",
+    tags: ["#전통", "#달", "#가로형"],
   },
 ];
 

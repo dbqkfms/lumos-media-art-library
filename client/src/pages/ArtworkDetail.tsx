@@ -129,13 +129,24 @@ export default function ArtworkDetail() {
           <span className="font-accent text-xs tracking-widest">쇼룸 종료 (ESC)</span>
         </button>
 
-        {/* Artwork image fills screen */}
+        {/* Artwork fills screen */}
         <div className="relative w-full h-full flex items-center justify-center">
-          <img
-            src={artwork.image}
-            alt={artwork.title}
-            className="max-w-full max-h-full object-contain"
-          />
+          {(artwork as any).videoSrc ? (
+            <video
+              src={(artwork as any).videoSrc}
+              className="max-w-full max-h-full object-contain"
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          ) : (
+            <img
+              src={artwork.image}
+              alt={artwork.title}
+              className="max-w-full max-h-full object-contain"
+            />
+          )}
           {/* Watermark */}
           <div
             className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
@@ -160,11 +171,22 @@ export default function ArtworkDetail() {
       {/* ─── Full-Screen Artwork Display ─── */}
       <section className="relative" style={{ minHeight: "90vh" }}>
         <div className="relative w-full" style={{ height: "90vh" }}>
-          <img
-            src={artwork.image}
-            alt={artwork.title}
-            className="w-full h-full object-contain bg-[#050505] animate-slow-zoom"
-          />
+          {(artwork as any).videoSrc ? (
+            <video
+              src={(artwork as any).videoSrc}
+              className="w-full h-full object-contain bg-[#050505]"
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          ) : (
+            <img
+              src={artwork.image}
+              alt={artwork.title}
+              className="w-full h-full object-contain bg-[#050505] animate-slow-zoom"
+            />
+          )}
           {/* Watermark on main view */}
           <div
             className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
@@ -284,13 +306,38 @@ export default function ArtworkDetail() {
           {/* Tab Content */}
           {activeTab === "video" && (
             <div className="relative">
-              {/* Video preview — artwork image as placeholder */}
+              {/* Video preview */}
               <div className="relative aspect-video bg-[#050505] overflow-hidden max-w-4xl mx-auto">
-                <img
-                  src={artwork.image}
-                  alt={artwork.title}
-                  className="w-full h-full object-contain"
-                />
+                {(artwork as any).videoSrc ? (
+                  <video
+                    ref={videoRef}
+                    src={(artwork as any).videoSrc}
+                    className="w-full h-full object-contain"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    controls
+                  />
+                ) : (
+                  <>
+                    <img
+                      src={artwork.image}
+                      alt={artwork.title}
+                      className="w-full h-full object-contain"
+                    />
+                    {/* Play overlay for image-only artworks */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div
+                        className={`w-16 h-16 rounded-full flex items-center justify-center border-2 cursor-pointer hover:scale-110 transition-transform duration-200`}
+                        style={{ borderColor: accentColor, backgroundColor: `${accentColor}20` }}
+                        onClick={() => setCtaOpen(true)}
+                      >
+                        <span style={{ color: accentColor }} className="text-2xl ml-1">▶</span>
+                      </div>
+                    </div>
+                  </>
+                )}
                 {/* Watermark */}
                 <div
                   className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
@@ -300,20 +347,12 @@ export default function ArtworkDetail() {
                     {watermarkLabel}
                   </span>
                 </div>
-                {/* Play overlay */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div
-                    className={`w-16 h-16 rounded-full flex items-center justify-center border-2 cursor-pointer hover:scale-110 transition-transform duration-200`}
-                    style={{ borderColor: accentColor, backgroundColor: `${accentColor}20` }}
-                    onClick={() => setCtaOpen(true)}
-                  >
-                    <span style={{ color: accentColor }} className="text-2xl ml-1">▶</span>
-                  </div>
-                </div>
               </div>
-              <p className="text-center font-accent text-xs tracking-widest text-gray-600 mt-4">
-                전체 영상은 문의 후 제공됩니다
-              </p>
+              {!(artwork as any).videoSrc && (
+                <p className="text-center font-accent text-xs tracking-widest text-gray-600 mt-4">
+                  전체 영상은 문의 후 제공됩니다
+                </p>
+              )}
             </div>
           )}
 

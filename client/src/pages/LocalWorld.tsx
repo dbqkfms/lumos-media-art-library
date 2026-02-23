@@ -236,12 +236,23 @@ export default function LocalWorld() {
                   onClick={() => setLocation(`/artwork/${artwork.id}`)}
                 >
                   <div className="relative overflow-hidden aspect-video bg-[#111]">
-                    <img
-                      src={artwork.image}
-                      alt={artwork.title}
-                      className="w-full h-full object-cover transition-transform duration-500"
-                      loading="lazy"
-                    />
+                    {artwork.videoSrc ? (
+                      <video
+                        src={artwork.videoSrc}
+                        className="w-full h-full object-cover transition-transform duration-500"
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                      />
+                    ) : (
+                      <img
+                        src={artwork.image}
+                        alt={artwork.title}
+                        className="w-full h-full object-cover transition-transform duration-500"
+                        loading="lazy"
+                      />
+                    )}
                     <div className="card-hover-overlay card-hover-overlay-local">
                       <span className="card-hover-label">▶ 미리보기</span>
                     </div>
