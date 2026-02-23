@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useRoute } from "wouter";
 import { ArrowLeft, Download, Share2, ChevronDown, ChevronUp } from "lucide-react";
 import Header from "@/components/Header";
+import FloatingCTA from "@/components/FloatingCTA";
 import { standardArtworks, type Artwork as StandardArtwork } from "@/data/standardArtworks";
 import { localArtworks, type Artwork as LocalArtwork } from "@/data/localArtworks";
 import { toast } from "sonner";
@@ -24,6 +25,7 @@ export default function ArtworkDetail() {
   const [artwork, setArtwork] = useState<Artwork | null>(null);
   const [relatedArtworks, setRelatedArtworks] = useState<Artwork[]>([]);
   const [descExpanded, setDescExpanded] = useState(false);
+  const [ctaOpen, setCtaOpen] = useState(false);
 
   useEffect(() => {
     if (!params?.id) return;
@@ -137,12 +139,12 @@ export default function ArtworkDetail() {
                 {/* Action Buttons */}
                 <div className="flex flex-wrap gap-3">
                   <button
-                    onClick={handleDownload}
+                    onClick={() => setCtaOpen(true)}
                     className={btnClass}
                   >
                     <span className="flex items-center gap-2">
                       <Download className="w-3.5 h-3.5" />
-                      다운로드 문의
+                      이 작품으로 문의하기
                     </span>
                   </button>
                   <button
@@ -223,6 +225,13 @@ export default function ArtworkDetail() {
           </div>
         </section>
       )}
+
+      {/* FloatingCTA — artwork name auto-filled */}
+      <FloatingCTA
+        artworkName={artwork.title}
+        forceOpen={ctaOpen}
+        onClose={() => setCtaOpen(false)}
+      />
 
       {/* Footer */}
       <footer className="py-12 px-12 md:px-20 border-t border-white/5 bg-[#0a0a0a]">
