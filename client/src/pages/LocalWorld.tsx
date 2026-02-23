@@ -1,32 +1,41 @@
 /*
-  LocalWorld v2 — Dark Gallery with Blue Accent
-  - Dark base (#0a0a0a) — unified with STANDARD
-  - Blue/Silver accent (#93C5FD)
-  - 4-column grid (desktop)
-  - Search bar
-  - Slim cards: thumbnail + title + category tag only
-  - Hover: scale(1.02) + blue glow
+  LocalWorld v3 — High-end Gallery with Blue Accent
+  - 4-column grid (desktop), 3 (tablet), 2 (mobile)
+  - Search bar: title / category / #tag
+  - Category filter pills + direction filter
+  - Infinite scroll (12 per batch)
+  - Card hover: scale(1.02) + blue glow + "▶ 미리보기" overlay
+  - Fade-up stagger on card entry
 */
-
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { useLocation } from "wouter";
-import { Search } from "lucide-react";
+import { Search, LayoutGrid, LayoutList } from "lucide-react";
 import Header from "@/components/Header";
 import FloatingCTA from "@/components/FloatingCTA";
 import { localArtworks, localCategories } from "@/data/localArtworks";
 
+const PAGE_SIZE = 12;
+
 export default function LocalWorld() {
   const [, setLocation] = useLocation();
   const [activeFilter, setActiveFilter] = useState("All");
+  const [dirFilter, setDirFilter] = useState<"All" | "Horizontal" | "Vertical">("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(1);
+  const loaderRef = useRef<HTMLDivElement | null>(null);
 
+  // Filtered + searched artworks
   const filteredArtworks = useMemo(() => {
     let result = activeFilter === "All"
       ? localArtworks
       : localArtworks.filter((art) => art.category === activeFilter);
 
+    if (dirFilter !== "All") {
+      result = result.filter((art) => art.displayType === dirFilter);
+    }
+
     if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
+      const q = searchQuery.toLowerCase().replace(/^#/, "");
       result = result.filter(
         (art) =>
           art.title.toLowerCase().includes(q) ||
@@ -34,7 +43,54 @@ export default function LocalWorld() {
       );
     }
     return result;
-  }, [activeFilter, searchQuery]);
+  }, [activeFilter, dirFilter, searchQuery]);
+
+  // Reset page on filter change
+  useEffect(() => {
+    setPage(1);
+  }, [activeFilter, dirFilter, searchQuery]);
+
+  // Paginated slice
+  const visibleArtworks = useMemo(
+    () => filteredArtworks.slice(0, page * PAGE_SIZE),
+    [filteredArtworks, page]
+  );
+
+  const hasMore = visibleArtworks.length < filteredArtworks.length;
+
+  // Infinite scroll observer
+  const handleObserver = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      if (entries[0].isIntersecting && hasMore) {
+        setPage((p) => p + 1);
+      }
+    },
+    [hasMore]
+  );
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(handleObserver, { threshold: 0.1 });
+    if (loaderRef.current) observer.observe(loaderRef.current);
+    return () => observer.disconnect();
+  }, [handleObserver]);
+
+  // Fade-up on card entry
+  useEffect(() => {
+    const cards = document.querySelectorAll<HTMLElement>(".gallery-card-animate-local");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            (entry.target as HTMLElement).style.opacity = "1";
+            (entry.target as HTMLElement).style.transform = "translateY(0)";
+          }
+        });
+      },
+      { threshold: 0.05 }
+    );
+    cards.forEach((card) => observer.observe(card));
+    return () => observer.disconnect();
+  }, [visibleArtworks]);
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
@@ -56,7 +112,6 @@ export default function LocalWorld() {
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/90" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-transparent" />
         </div>
-
         <div className="relative z-10 px-12 md:px-20 pb-16 md:pb-20">
           <p className="font-accent text-xs tracking-[0.3em] text-[#93C5FD] mb-5">
             KOREAN COMMERCIAL ART
@@ -75,51 +130,75 @@ export default function LocalWorld() {
         <div className="max-w-screen-xl mx-auto">
 
           {/* Search Bar */}
-          <div className="relative mb-10 max-w-xl">
+          <div className="relative mb-8 max-w-xl">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="작품명 또는 카테고리로 검색..."
+              placeholder="작품명, 카테고리, #태그로 검색..."
               className="search-bar search-bar-local"
             />
           </div>
 
-          {/* Filter Pills */}
-          <div className="flex flex-wrap gap-2.5 mb-12">
-            {localCategories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setActiveFilter(category)}
-                className={`filter-pill ${
-                  activeFilter === category
-                    ? "filter-pill-active-local"
-                    : ""
-                }`}
-              >
-                {category}
-              </button>
-            ))}
+          {/* Filter Row */}
+          <div className="flex flex-wrap items-center gap-3 mb-10">
+            {/* Category pills */}
+            <div className="flex flex-wrap gap-2">
+              {localCategories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setActiveFilter(category)}
+                  className={`filter-pill ${
+                    activeFilter === category ? "filter-pill-active-local" : ""
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+
+            {/* Divider */}
+            <div className="hidden md:block w-px h-5 bg-white/10 mx-1" />
+
+            {/* Direction filter */}
+            <div className="flex gap-2">
+              {(["All", "Horizontal", "Vertical"] as const).map((dir) => (
+                <button
+                  key={dir}
+                  onClick={() => setDirFilter(dir)}
+                  className={`filter-pill flex items-center gap-1.5 ${
+                    dirFilter === dir ? "filter-pill-active-local" : ""
+                  }`}
+                >
+                  {dir === "Horizontal" && <LayoutGrid className="w-3 h-3" />}
+                  {dir === "Vertical" && <LayoutList className="w-3 h-3" />}
+                  {dir === "All" ? "전체" : dir === "Horizontal" ? "가로형" : "세로형"}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Results count */}
-          {searchQuery && (
-            <p className="font-accent text-xs tracking-widest text-gray-600 mb-8">
-              {filteredArtworks.length}개 작품
-            </p>
-          )}
+          <p className="font-accent text-xs tracking-widest text-gray-600 mb-8">
+            {filteredArtworks.length}개 작품
+          </p>
 
           {/* Artworks Grid — 4 columns */}
-          {filteredArtworks.length > 0 ? (
+          {visibleArtworks.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {filteredArtworks.map((artwork) => (
+              {visibleArtworks.map((artwork, idx) => (
                 <div
                   key={artwork.id}
-                  className="gallery-card gallery-card-local"
+                  className="gallery-card gallery-card-local gallery-card-animate-local"
+                  style={{
+                    opacity: 0,
+                    transform: "translateY(20px)",
+                    transition: `opacity 0.5s ease ${(idx % PAGE_SIZE) * 0.05}s, transform 0.5s ease ${(idx % PAGE_SIZE) * 0.05}s`,
+                  }}
                   onClick={() => setLocation(`/artwork/${artwork.id}`)}
                 >
-                  {/* Thumbnail */}
+                  {/* Thumbnail with hover overlay */}
                   <div className="relative overflow-hidden aspect-video bg-[#111]">
                     <img
                       src={artwork.image}
@@ -127,7 +206,10 @@ export default function LocalWorld() {
                       className="w-full h-full object-cover transition-transform duration-500"
                       loading="lazy"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
+                    {/* Hover overlay */}
+                    <div className="card-hover-overlay card-hover-overlay-local">
+                      <span className="card-hover-label">▶ 미리보기</span>
+                    </div>
                   </div>
 
                   {/* Slim Card Content */}
@@ -135,9 +217,14 @@ export default function LocalWorld() {
                     <h3 className="text-sm font-semibold text-white leading-tight line-clamp-1 mb-2">
                       {artwork.title}
                     </h3>
-                    <span className="inline-block font-accent text-[10px] tracking-widest text-[#93C5FD] bg-[#93C5FD]/10 px-2 py-0.5">
-                      {artwork.category}
-                    </span>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="inline-block font-accent text-[10px] tracking-widest text-[#93C5FD] bg-[#93C5FD]/10 px-2 py-0.5">
+                        {artwork.category}
+                      </span>
+                      <span className="inline-block font-accent text-[9px] tracking-widest text-gray-600 bg-white/5 px-2 py-0.5">
+                        {artwork.displayType === "Horizontal" ? "가로" : "세로"}
+                      </span>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -145,6 +232,13 @@ export default function LocalWorld() {
           ) : (
             <div className="text-center py-24">
               <p className="text-gray-600 font-accent text-xs tracking-widest">검색 결과가 없습니다</p>
+            </div>
+          )}
+
+          {/* Infinite scroll loader */}
+          {hasMore && (
+            <div ref={loaderRef} className="flex justify-center py-16">
+              <div className="w-6 h-6 border border-[#93C5FD]/30 border-t-[#93C5FD] rounded-full animate-spin" />
             </div>
           )}
         </div>
