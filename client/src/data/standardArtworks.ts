@@ -185,7 +185,7 @@ export const standardArtworks: Artwork[] = [
     description: "황금빛 기하 다이아몬드가 빛의 속도로 공간을 관통하는 순간을 포착한 작품. 속도와 정밀함이 만들어내는 긴장감을 표현합니다.",
     category: "Abstract",
     videoSrc: "/videos/standard/golden-vector.mp4",
-    image: "",
+    image: "/thumbnails/golden-vector.jpg",
     displayType: "Horizontal",
     runtime: "20",
     resolution: "1280x720",
