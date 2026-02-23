@@ -195,7 +195,7 @@ export const localArtworks: Artwork[] = [
     title: "백련 만다라 (白蓮曼陀羅)",
     description: "연꾷의 기하학적 대칭이 프랙탈로 무한 확장되는 명상적 영상. 은빛 만다라 패턴이 고요하게 피어나며 공간에 정제된 아름다움을 더합니다.",
     category: "Nature",
-    image: "",
+    image: "/thumbnails/baekryeon-mandala.jpg",
     videoSrc: "/videos/local/fractal-lotus-2.mp4",
     displayType: "Horizontal",
     runtime: "10",
