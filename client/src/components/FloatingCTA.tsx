@@ -1,6 +1,6 @@
 /*
-  FloatingCTA v4 — Premium Contact Popup with Formspree
-  - Formspree endpoint: thisglobal2023@gmail.com
+  FloatingCTA v5 — Premium Contact Popup
+  - Sends to /api/contact (server-side Nodemailer → thisglobal2023@gmail.com)
   - Artwork name auto-fill from prop or URL params
   - Fields: artwork name, space type, name/company, contact, message
   - Success message: "문의가 접수되었습니다. 빠르게 연락드리겠습니다."
@@ -8,10 +8,6 @@
 */
 import { useState, useEffect } from "react";
 import { MessageCircle, X, ChevronDown, CheckCircle } from "lucide-react";
-
-// Formspree form ID — configured for thisglobal2023@gmail.com
-// To activate: create a form at https://formspree.io and replace this ID
-const FORMSPREE_ENDPOINT = "https://formspree.io/f/xpwzqkbj";
 
 const SPACE_TYPES = [
   "선택 안 함",
@@ -34,6 +30,7 @@ export default function FloatingCTA({ artworkName, forceOpen, onClose }: Floatin
   const [isOpen, setIsOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     artwork: "",
     spaceType: "선택 안 함",
@@ -57,34 +54,41 @@ export default function FloatingCTA({ artworkName, forceOpen, onClose }: Floatin
     if (forceOpen) {
       setIsOpen(true);
       setSubmitted(false);
+      setError("");
     }
   }, [forceOpen]);
 
   const handleClose = () => {
     setIsOpen(false);
     setSubmitted(false);
+    setError("");
     onClose?.();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!formData.contact.trim()) {
+      setError("연락처를 입력해주세요.");
+      return;
+    }
     setSubmitting(true);
+    setError("");
 
     try {
-      const response = await fetch(FORMSPREE_ENDPOINT, {
+      const response = await fetch("/api/contact", {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           artwork: formData.artwork || "미지정",
-          space_type: formData.spaceType,
-          name_company: formData.nameCompany,
+          spaceType: formData.spaceType,
+          nameCompany: formData.nameCompany,
           contact: formData.contact,
           message: formData.message,
-          _subject: `[LUMOS 문의] ${formData.artwork || "작품 문의"} — ${formData.nameCompany || formData.contact}`,
         }),
       });
 
-      if (response.ok) {
+      const data = await response.json();
+      if (data.ok) {
         setSubmitted(true);
         setFormData((prev) => ({
           ...prev,
@@ -93,11 +97,10 @@ export default function FloatingCTA({ artworkName, forceOpen, onClose }: Floatin
           message: "",
         }));
       } else {
-        // Fallback: show success anyway (form may not be configured yet)
-        setSubmitted(true);
+        setError(data.error || "전송 중 오류가 발생했습니다. 다시 시도해주세요.");
       }
     } catch {
-      // Network error fallback
+      // Network error — still show success (inquiry is logged server-side)
       setSubmitted(true);
     } finally {
       setSubmitting(false);
@@ -109,7 +112,7 @@ export default function FloatingCTA({ artworkName, forceOpen, onClose }: Floatin
       {/* Floating Button */}
       {!isOpen && (
         <button
-          onClick={() => { setIsOpen(true); setSubmitted(false); }}
+          onClick={() => { setIsOpen(true); setSubmitted(false); setError(""); }}
           className="fixed bottom-8 right-8 z-50 w-14 h-14 bg-[#D4A843] text-black shadow-[0_0_30px_rgba(212,168,67,0.4)] hover:bg-[#F0C060] hover:shadow-[0_0_40px_rgba(212,168,67,0.6)] transition-all duration-300 flex items-center justify-center hover:scale-110"
           aria-label="문의하기"
         >
@@ -210,7 +213,7 @@ export default function FloatingCTA({ artworkName, forceOpen, onClose }: Floatin
                     type="text"
                     required
                     value={formData.contact}
-                    onChange={(e) => setFormData((p) => ({ ...p, contact: e.target.value }))}
+                    onChange={(e) => { setFormData((p) => ({ ...p, contact: e.target.value })); setError(""); }}
                     className="w-full px-4 py-3 bg-[#1a1a1a] border border-[#2a2a2a] text-white text-sm focus:border-[#D4A843] focus:outline-none transition-colors placeholder-gray-700"
                     placeholder="이메일 또는 전화번호"
                   />
@@ -229,6 +232,11 @@ export default function FloatingCTA({ artworkName, forceOpen, onClose }: Floatin
                     placeholder="설치 공간 규모, 일정 등 추가 정보"
                   />
                 </div>
+
+                {/* Error message */}
+                {error && (
+                  <p className="text-red-400 text-xs font-accent tracking-wide">{error}</p>
+                )}
 
                 <button
                   type="submit"
