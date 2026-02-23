@@ -218,7 +218,7 @@ export const standardArtworks: Artwork[] = [
     description: "황금빛 꽃이 우주의 수면 위에 피어나는 장엄한 광연. 빛의 교향이 공간을 압도하는 순간의 우주적 에너지를 담았습니다.",
     category: "Light",
     videoSrc: "/videos/standard/majestic-bloom.mp4",
-    image: "",
+    image: "/thumbnails/majestic_light_symphony_v1.png",
     displayType: "Horizontal",
     runtime: "15",
     resolution: "1920x1080",
