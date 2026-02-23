@@ -1,9 +1,10 @@
 /*
-  Header Component v2 — Premium Dark Navigation
+  Header Component v3 — Premium Dark Navigation
+  - Logo image (logo-standard.png) left side, 40px height
   - Transparent → blur on scroll
   - STANDARD: Gold accent mega menu
   - LOCAL: Blue accent mega menu
-  - About / Contact removed (non-functional)
+  - THIS GLOBAL external link (right side)
 */
 
 import { useState, useEffect } from "react";
@@ -50,6 +51,7 @@ export default function Header({ currentWorld }: HeaderProps = {}) {
   const [location, setLocation] = useLocation();
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -62,24 +64,42 @@ export default function Header({ currentWorld }: HeaderProps = {}) {
   const isActive = (path: string) => location === path;
 
   const headerBg = scrolled
-    ? "bg-black/85 backdrop-blur-xl border-b border-white/5"
+    ? "bg-[#111]/90 backdrop-blur-xl border-b border-white/5"
     : "bg-transparent border-b border-transparent";
 
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${headerBg}`}
     >
-      <div className="max-w-screen-xl mx-auto px-8 py-5 flex items-center justify-between">
+      <div className="max-w-screen-xl mx-auto px-8 py-4 flex items-center justify-between">
         {/* Logo */}
         <button
           onClick={() => setLocation("/")}
-          className="font-display text-2xl tracking-widest text-[#D4A843] hover:text-[#F0C060] transition-colors duration-300"
+          className="flex items-center"
+          aria-label="LUMOS Home"
         >
-          LUMOS
+          <img
+            src="/assets/logo-standard.png"
+            alt="LUMOS"
+            style={{ height: "40px", width: "auto" }}
+            onError={(e) => {
+              // fallback to text if image not found
+              const target = e.currentTarget as HTMLImageElement;
+              target.style.display = "none";
+              const fallback = target.nextElementSibling as HTMLElement;
+              if (fallback) fallback.style.display = "block";
+            }}
+          />
+          <span
+            className="font-display text-2xl tracking-widest text-[#D4A843] hover:text-[#F0C060] transition-colors duration-300"
+            style={{ display: "none" }}
+          >
+            LUMOS
+          </span>
         </button>
 
-        {/* Navigation */}
-        <nav className="flex items-center gap-10">
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center gap-10">
           {/* Home */}
           <button
             onClick={() => setLocation("/")}
@@ -116,7 +136,6 @@ export default function Header({ currentWorld }: HeaderProps = {}) {
                   className="absolute top-full left-1/2 -translate-x-1/2 mt-5 w-[820px] bg-[#0a0a0a]/98 backdrop-blur-2xl border border-[#D4A843]/20 shadow-[0_20px_80px_rgba(0,0,0,0.8)]"
                 >
                   <div className="p-8">
-                    {/* Category Tabs */}
                     <div className="flex gap-6 mb-7 pb-5 border-b border-white/8">
                       {standardCategories.map((cat) => (
                         <button
@@ -128,8 +147,6 @@ export default function Header({ currentWorld }: HeaderProps = {}) {
                         </button>
                       ))}
                     </div>
-
-                    {/* Artwork Grid */}
                     <div className="grid grid-cols-4 gap-3 mb-7">
                       {standardPreviews.map((artwork) => (
                         <div
@@ -153,8 +170,6 @@ export default function Header({ currentWorld }: HeaderProps = {}) {
                         </div>
                       ))}
                     </div>
-
-                    {/* View All */}
                     <div className="text-right">
                       <button
                         onClick={() => setLocation("/standard")}
@@ -195,7 +210,6 @@ export default function Header({ currentWorld }: HeaderProps = {}) {
                   className="absolute top-full left-1/2 -translate-x-1/2 mt-5 w-[820px] bg-[#0a0a0a]/98 backdrop-blur-2xl border border-[#93C5FD]/20 shadow-[0_20px_80px_rgba(0,0,0,0.8)]"
                 >
                   <div className="p-8">
-                    {/* Category Tabs */}
                     <div className="flex gap-6 mb-7 pb-5 border-b border-white/8">
                       {localCategories.map((cat) => (
                         <button
@@ -207,8 +221,6 @@ export default function Header({ currentWorld }: HeaderProps = {}) {
                         </button>
                       ))}
                     </div>
-
-                    {/* Artwork Grid */}
                     <div className="grid grid-cols-4 gap-3 mb-7">
                       {localPreviews.map((artwork) => (
                         <div
@@ -232,8 +244,6 @@ export default function Header({ currentWorld }: HeaderProps = {}) {
                         </div>
                       ))}
                     </div>
-
-                    {/* View All */}
                     <div className="text-right">
                       <button
                         onClick={() => setLocation("/local")}
@@ -247,8 +257,51 @@ export default function Header({ currentWorld }: HeaderProps = {}) {
               )}
             </AnimatePresence>
           </div>
+
+          {/* Divider */}
+          <span className="w-px h-4 bg-white/10" />
+
+          {/* THIS GLOBAL — External Link */}
+          <a
+            href="https://www.thisglobal.kr/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-accent text-xs tracking-widest uppercase text-gray-500 hover:text-white transition-colors duration-200"
+          >
+            THIS GLOBAL ↗
+          </a>
         </nav>
+
+        {/* Mobile Hamburger */}
+        <button
+          className="md:hidden flex flex-col gap-1.5 p-2"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label="Toggle menu"
+        >
+          <span className={`block w-6 h-px bg-white/70 transition-all duration-300 ${mobileOpen ? "rotate-45 translate-y-2" : ""}`} />
+          <span className={`block w-6 h-px bg-white/70 transition-all duration-300 ${mobileOpen ? "opacity-0" : ""}`} />
+          <span className={`block w-6 h-px bg-white/70 transition-all duration-300 ${mobileOpen ? "-rotate-45 -translate-y-2" : ""}`} />
+        </button>
       </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-[#0a0a0a]/98 backdrop-blur-xl border-t border-white/5 overflow-hidden"
+          >
+            <div className="px-8 py-6 flex flex-col gap-6">
+              <button onClick={() => { setLocation("/"); setMobileOpen(false); }} className="font-accent text-xs tracking-widest uppercase text-gray-400 hover:text-white text-left">Home</button>
+              <button onClick={() => { setLocation("/standard"); setMobileOpen(false); }} className="font-accent text-xs tracking-widest uppercase text-[#D4A843] text-left">STANDARD</button>
+              <button onClick={() => { setLocation("/local"); setMobileOpen(false); }} className="font-accent text-xs tracking-widest uppercase text-[#93C5FD] text-left">LOCAL</button>
+              <a href="https://www.thisglobal.kr/" target="_blank" rel="noopener noreferrer" className="font-accent text-xs tracking-widest uppercase text-gray-400 hover:text-white">THIS GLOBAL ↗</a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
