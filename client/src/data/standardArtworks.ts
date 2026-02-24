@@ -303,4 +303,4 @@ export const standardArtworks: Artwork[] = [
   },
 ];
 
-export const standardCategories = ["All", "Abstract", "Cosmic", "Material", "Light", "Pattern", "Oriental"];
+export const standardCategories = ["All", "Abstract", "Cosmic", "Material", "Light", "Pattern", "Oriental", "Traditional"];
