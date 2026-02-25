@@ -14,7 +14,7 @@ export interface Artwork {
   resolution: string;
 }
 
-export const standardArtworks: Artwork[] = [,
+export const standardArtworks: Artwork[] = [
   {
     id: "standard-now-infinite",
     title: "Now Is Infinite",
@@ -181,7 +181,6 @@ export const standardArtworks: Artwork[] = [,
     runtime: "15",
     resolution: "1920x1080",
   },
-,
   {
     id: "standard-cheongyong",
     title: "청뢡 (青龍)",
