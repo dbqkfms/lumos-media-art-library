@@ -51,7 +51,7 @@ function LogoMark() {
     <img
       src="/assets/lumos-logo.png"
       alt="LUMOS"
-      style={{ height: 48, width: "auto", objectFit: "contain" }}
+      style={{ height: 56, width: "auto", maxWidth: 220, objectFit: "contain", display: "block" }}
     />
   );
 }
