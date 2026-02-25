@@ -47,47 +47,12 @@ interface HeaderProps {
 }
 
 function LogoMark() {
-  const [imgError, setImgError] = useState(false);
-
-  if (imgError) {
-    // Fallback: styled text logo
-    return (
-      <span className="flex items-center gap-2">
-        <span
-          style={{
-            display: "inline-block",
-            width: 36,
-            height: 36,
-            background: "linear-gradient(135deg, #D4A843 0%, #F0C060 50%, #B8902E 100%)",
-            clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
-          }}
-        />
-        <span
-          className="font-display tracking-[0.2em] text-white"
-          style={{ fontSize: "1.35rem", letterSpacing: "0.22em", fontWeight: 700 }}
-        >
-          LUMOS
-        </span>
-      </span>
-    );
-  }
-
   return (
-    <span className="flex items-center gap-2.5">
-      <img
-        src="/assets/logo-standard.png"
-        alt="LUMOS"
-        style={{ height: 40, width: "auto", objectFit: "contain" }}
-        onError={() => setImgError(true)}
-      />
-      {/* Always show text next to logo for legibility */}
-      <span
-        className="font-display tracking-[0.2em] text-white"
-        style={{ fontSize: "1.35rem", letterSpacing: "0.22em", fontWeight: 700 }}
-      >
-        LUMOS
-      </span>
-    </span>
+    <img
+      src="/assets/lumos-logo.png"
+      alt="LUMOS"
+      style={{ height: 48, width: "auto", objectFit: "contain" }}
+    />
   );
 }
 
@@ -175,31 +140,6 @@ export default function Header({ currentWorld }: HeaderProps = {}) {
                       ))}
                     </div>
 
-                    {/* Artwork Grid */}
-                    <div className="grid grid-cols-4 gap-3 mb-7">
-                      {standardPreviews.map((artwork) => (
-                        <div
-                          key={artwork.id}
-                          className="group cursor-pointer"
-                          onClick={() => setLocation("/standard")}
-                        >
-                          <div className="relative overflow-hidden aspect-[4/3] bg-[#111]">
-                            <img
-                              src={artwork.image}
-                              alt={artwork.title}
-                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                              <div className="absolute bottom-0 left-0 right-0 p-2.5">
-                                <p className="text-xs font-medium text-white leading-tight">{artwork.title}</p>
-                                <p className="text-[10px] text-[#D4A843] mt-0.5">{artwork.category}</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
                     {/* View All */}
                     <div className="text-right">
                       <button
@@ -251,31 +191,6 @@ export default function Header({ currentWorld }: HeaderProps = {}) {
                         >
                           {cat}
                         </button>
-                      ))}
-                    </div>
-
-                    {/* Artwork Grid */}
-                    <div className="grid grid-cols-4 gap-3 mb-7">
-                      {localPreviews.map((artwork) => (
-                        <div
-                          key={artwork.id}
-                          className="group cursor-pointer"
-                          onClick={() => setLocation("/local")}
-                        >
-                          <div className="relative overflow-hidden aspect-[4/3] bg-[#111]">
-                            <img
-                              src={artwork.image}
-                              alt={artwork.title}
-                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                              <div className="absolute bottom-0 left-0 right-0 p-2.5">
-                                <p className="text-xs font-medium text-white leading-tight">{artwork.title}</p>
-                                <p className="text-[10px] text-[#93C5FD] mt-0.5">{artwork.category}</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
                       ))}
                     </div>
 
