@@ -8,12 +8,81 @@
   - Contact Us → opens FloatingCTA
 */
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { Search, X, Layers } from "lucide-react";
 import Header from "@/components/Header";
 import FloatingCTA from "@/components/FloatingCTA";
 import { localArtworks, localCategories } from "@/data/localArtworks";
+
+// 갤러리 카드 영상 모드 설정
+// "hover"  : 기본 썸네일, 마우스 오버 시 영상 재생
+// "autoplay": 모든 카드 자동 재생
+const CARD_VIDEO_MODE: "hover" | "autoplay" = "hover";
+
+// 영상 카드 컴포넌트
+function ArtworkCard({ artwork, onClick }: { artwork: typeof localArtworks[0]; onClick: () => void }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const handleMouseEnter = () => {
+    if (CARD_VIDEO_MODE === "hover" && videoRef.current) {
+      videoRef.current.play().catch(() => {});
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (CARD_VIDEO_MODE === "hover" && videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+  };
+
+  return (
+    <div
+      className="gallery-card gallery-card-local group cursor-pointer"
+      onClick={onClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div className="relative overflow-hidden aspect-video bg-[#111]">
+        {/* 기본: 썸네일 이미지 */}
+        <img
+          src={artwork.image}
+          alt={artwork.title}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          loading="lazy"
+        />
+        {/* 영상 오버레이 */}
+        {artwork.videoSrc && (
+          <video
+            ref={videoRef}
+            src={artwork.videoSrc}
+            loop
+            muted
+            playsInline
+            autoPlay={CARD_VIDEO_MODE === "autoplay"}
+            className={
+              CARD_VIDEO_MODE === "autoplay"
+                ? "absolute inset-0 w-full h-full object-cover"
+                : "absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            }
+          />
+        )}
+        <div className="card-hover-overlay card-hover-overlay-local">
+          <span className="card-hover-label">▶ 미리보기</span>
+        </div>
+      </div>
+      <div className="px-3.5 py-3">
+        <h3 className="text-sm font-semibold text-white leading-tight line-clamp-1 mb-2 group-hover:text-[#93C5FD] transition-colors duration-200">
+          {artwork.title}
+        </h3>
+        <span className="inline-block font-accent text-[10px] tracking-widest text-[#93C5FD] bg-[#93C5FD]/10 px-2 py-0.5">
+          {artwork.category}
+        </span>
+      </div>
+    </div>
+  );
+}
 
 // Skeleton Card Component
 function SkeletonCard() {
@@ -153,47 +222,11 @@ export default function LocalWorld() {
             /* Artworks Grid — 4 columns desktop, 2 columns mobile */
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {filteredArtworks.map((artwork) => (
-                <div
+                <ArtworkCard
                   key={artwork.id}
-                  className="gallery-card gallery-card-local group cursor-pointer"
+                  artwork={artwork}
                   onClick={() => setLocation(`/artwork/${artwork.id}`)}
-                >
-                  {/* Thumbnail */}
-                  <div className="relative overflow-hidden aspect-video bg-[#111]">
-                    {/* 기본: 썸네일 이미지 */}
-                    <img
-                      src={artwork.image}
-                      alt={artwork.title}
-                      className="w-full h-full object-cover transition-transform duration-500"
-                      loading="lazy"
-                    />
-                    {/* hover 시: 영상 오버레이 재생 */}
-                    {artwork.videoSrc && (
-                      <video
-                        src={artwork.videoSrc}
-                        loop
-                        muted
-                        playsInline
-                        onMouseEnter={(e) => (e.currentTarget as HTMLVideoElement).play()}
-                        onMouseLeave={(e) => { (e.currentTarget as HTMLVideoElement).pause(); (e.currentTarget as HTMLVideoElement).currentTime = 0; }}
-                        className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      />
-                    )}
-                    <div className="card-hover-overlay card-hover-overlay-local">
-                      <span className="card-hover-label">▶ 미리보기</span>
-                    </div>
-                  </div>
-
-                  {/* Slim Card Content */}
-                  <div className="px-3.5 py-3">
-                    <h3 className="text-sm font-semibold text-white leading-tight line-clamp-1 mb-2 group-hover:text-[#93C5FD] transition-colors duration-200">
-                      {artwork.title}
-                    </h3>
-                    <span className="inline-block font-accent text-[10px] tracking-widest text-[#93C5FD] bg-[#93C5FD]/10 px-2 py-0.5">
-                      {artwork.category}
-                    </span>
-                  </div>
-                </div>
+                />
               ))}
             </div>
           ) : (

@@ -9,9 +9,11 @@ export interface Artwork {
   description: string;
   category: string;
   image: string;
+  videoSrc?: string;  // 선택적: 영상 파일 경로
   displayType: "Horizontal" | "Vertical";
   runtime: string;
   resolution: string;
+  tags?: string[];
 }
 
 export const standardArtworks: Artwork[] = [
@@ -21,7 +23,7 @@ export const standardArtworks: Artwork[] = [
     description: "시간과 영원의 순간을 만다라와 시계탑으로 표현한 철학적 작품. 흐르는 모래와 멈춘 시계 사이에서 현재의 무한함을 탐구합니다.",
     category: "Abstract",
     videoSrc: "/videos/standard/now-infinite.mp4",
-    image: "/thumbnails/now-infinite.jpg",
+    image: "/thumbnails/set0_01_time.jpg",
     displayType: "Horizontal",
     runtime: "8",
     resolution: "1280x720",
@@ -110,7 +112,7 @@ export const standardArtworks: Artwork[] = [
     description: "먹과 채색이 어우러진 전통 산수화. 산과 강, 나무의 조화가 공간에 고요한 품격을 더합니다.",
     category: "Oriental",
     videoSrc: "/videos/standard/sansu.mp4",
-    image: "/thumbnails/sansu.jpg",
+    image: "/thumbnails/set1_02_calligraphy.jpg",
     displayType: "Horizontal",
     runtime: "8",
     resolution: "1280x720",
@@ -121,7 +123,7 @@ export const standardArtworks: Artwork[] = [
     description: "이젤 위 캔버스에 피어나는 수묵 산수. 붓이 닿는 순간 공간이 완성되는 과정을 담았습니다.",
     category: "Oriental",
     videoSrc: "/videos/standard/mukhyang.mp4",
-    image: "/thumbnails/mukhyang.jpg",
+    image: "/thumbnails/set0_02_calligraphy.jpg",
     displayType: "Horizontal",
     runtime: "8",
     resolution: "1280x720",
@@ -154,7 +156,7 @@ export const standardArtworks: Artwork[] = [
     description: "황금 봉황이 전통 건축 위를 날며 연꽃과 빛의 선율을 그리는 작품. 동양적 전통미와 현대적 디지털 아트의 조화가 공간에 웅장한 기운을 불어넣습니다.",
     category: "Oriental",
     videoSrc: "/videos/standard/golden-japanese.mp4",
-    image: "/thumbnails/bonghwang.jpg",
+    image: "/thumbnails/set1_07_fire_dragon.jpg",
     displayType: "Horizontal",
     runtime: "20",
     resolution: "1280x720",
@@ -165,7 +167,7 @@ export const standardArtworks: Artwork[] = [
     description: "흑백으로 재현된 근대 동양의 석등 골목. 시간이 멈춰 선 듯한 정적 속에 역사의 숨결이 느껴집니다.",
     category: "Oriental",
     videoSrc: "/videos/standard/goga.mp4",
-    image: "/thumbnails/goga.jpg",
+    image: "/thumbnails/set0_04_palace.jpg",
     displayType: "Horizontal",
     runtime: "15",
     resolution: "1920x1080",
@@ -198,7 +200,7 @@ export const standardArtworks: Artwork[] = [
     title: "흑뢡 (黑龍)",
     description: "타는 듯한 노을 배경에 나타나는 검은 용의 날카로운 실루얣. 실전과 강력함의 상징이 원시적 에너지를 동반합니다.",
     category: "Traditional",
-    image: "/thumbnails/heukryong.jpg",
+    image: "/thumbnails/set1_03_dragon.jpg",
     videoSrc: "/videos/standard/heukryong.mp4",
     displayType: "Horizontal",
     runtime: "15",
@@ -210,7 +212,7 @@ export const standardArtworks: Artwork[] = [
     title: "홍조 (紅鳥)",
     description: "붉은 빛과 분홍빛이 어우러지는 신성한 새의 날개. 기털이 말라나는 순간의 에너지와 자유를 담았습니다.",
     category: "Nature",
-    image: "/thumbnails/alt_11_fire_phoenix.jpg",
+    image: "/thumbnails/alt_13_dragon_flight.jpg",
     videoSrc: "/videos/standard/hongjyo.mp4",
     displayType: "Horizontal",
     runtime: "15",
@@ -282,7 +284,7 @@ export const standardArtworks: Artwork[] = [
     title: "산호 (珊瑚)",
     description: "황금빛 입자 속에서 산호와 해양 생물이 리듬감 있게 움직이는 수중 세계. 생명의 정교함과 풀지함을 담았습니다.",
     category: "Nature",
-    image: "/thumbnails/alt_15_tiger_zen.jpg",
+    image: "/thumbnails/set3_06_roaring_tiger.jpg",
     videoSrc: "/videos/standard/sanho.mp4",
     displayType: "Horizontal",
     runtime: "15",
@@ -294,7 +296,7 @@ export const standardArtworks: Artwork[] = [
     title: "칠성화 (七星花)",
     description: "붉은빛과 청록빛이 어우러지는 일곡 꽃잎의 신비로운 광연. 각 꽃잎에 서린 버섹 같은 빛이 우주의 에너지를 담습니다.",
     category: "Nature",
-    image: "/thumbnails/alt_03_dragon_coil.jpg",
+    image: "/thumbnails/set0_04_palace.jpg",
     videoSrc: "/videos/standard/chilseong.mp4",
     displayType: "Horizontal",
     runtime: "15",
