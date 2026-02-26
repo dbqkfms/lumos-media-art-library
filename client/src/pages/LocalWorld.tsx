@@ -160,21 +160,23 @@ export default function LocalWorld() {
                 >
                   {/* Thumbnail */}
                   <div className="relative overflow-hidden aspect-video bg-[#111]">
-                    {artwork.videoSrc ? (
+                    {/* 기본: 썸네일 이미지 */}
+                    <img
+                      src={artwork.image}
+                      alt={artwork.title}
+                      className="w-full h-full object-cover transition-transform duration-500"
+                      loading="lazy"
+                    />
+                    {/* hover 시: 영상 오버레이 재생 */}
+                    {artwork.videoSrc && (
                       <video
                         src={artwork.videoSrc}
-                        className="w-full h-full object-cover transition-transform duration-500"
-                        autoPlay
-                        muted
                         loop
+                        muted
                         playsInline
-                      />
-                    ) : (
-                      <img
-                        src={artwork.image}
-                        alt={artwork.title}
-                        className="w-full h-full object-cover transition-transform duration-500"
-                        loading="lazy"
+                        onMouseEnter={(e) => (e.currentTarget as HTMLVideoElement).play()}
+                        onMouseLeave={(e) => { (e.currentTarget as HTMLVideoElement).pause(); (e.currentTarget as HTMLVideoElement).currentTime = 0; }}
+                        className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                       />
                     )}
                     <div className="card-hover-overlay card-hover-overlay-local">
