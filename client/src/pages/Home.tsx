@@ -270,12 +270,23 @@ export default function Home() {
       <footer className="py-16 px-12 md:px-20 border-t border-white/5 bg-[#0a0a0a]">
         <div className="max-w-screen-xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
           <div>
-            <p className="font-display text-xl text-[#D4A843] mb-2">LUMOS</p>
-            <p className="text-sm text-gray-600">LED 디스플레이 전용 AI 생성 미디어아트 라이브러리</p>
+            <img
+              src="/assets/lumos-logo.png"
+              alt="LUMOS"
+              style={{ height: 36, width: "auto", objectFit: "contain" }}
+            />
+            <p className="text-sm text-gray-600 mt-2">LED 디스플레이 전용 AI 생성 미디어아트 라이브러리</p>
           </div>
           <div className="text-right">
-            <p className="text-sm text-gray-600">contact@lumos.art</p>
-            <p className="text-xs text-gray-700 mt-1">© 2025 LUMOS. All rights reserved.</p>
+            <a
+              href="https://www.thisglobal.kr/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-gray-500 hover:text-[#D4A843] transition-colors duration-200"
+            >
+              thisglobal.kr
+            </a>
+            <p className="text-xs text-gray-700 mt-1">© 2023 디스글로벌. All rights reserved.</p>
           </div>
         </div>
       </footer>

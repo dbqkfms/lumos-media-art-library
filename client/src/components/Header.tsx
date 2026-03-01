@@ -208,6 +208,15 @@ export default function Header({ currentWorld }: HeaderProps = {}) {
               )}
             </AnimatePresence>
           </div>
+          {/* DISGLOBAL 2023 External Link */}
+          <a
+            href="https://www.thisglobal.kr/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-accent text-xs tracking-widest uppercase transition-colors duration-200 text-gray-400 hover:text-white"
+          >
+            DISGLOBAL
+          </a>
         </nav>
       </div>
     </header>

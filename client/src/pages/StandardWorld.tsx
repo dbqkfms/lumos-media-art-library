@@ -279,8 +279,22 @@ export default function StandardWorld() {
       {/* Footer */}
       <footer className="py-12 px-12 md:px-20 border-t border-white/5 bg-[#0a0a0a]">
         <div className="max-w-screen-xl mx-auto flex items-center justify-between">
-          <p className="font-display text-lg text-[#D4A843]">LUMOS</p>
-          <p className="text-xs text-gray-700">© 2025 LUMOS. All rights reserved.</p>
+          <img
+            src="/assets/lumos-logo.png"
+            alt="LUMOS"
+            style={{ height: 32, width: "auto", objectFit: "contain" }}
+          />
+          <div className="text-right">
+            <a
+              href="https://www.thisglobal.kr/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-gray-500 hover:text-[#D4A843] transition-colors duration-200 block"
+            >
+              thisglobal.kr
+            </a>
+            <p className="text-xs text-gray-700 mt-1">© 2023 디스글로벌. All rights reserved.</p>
+          </div>
         </div>
       </footer>
     </div>

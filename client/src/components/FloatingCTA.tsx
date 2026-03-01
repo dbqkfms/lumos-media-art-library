@@ -180,15 +180,16 @@ export default function FloatingCTA() {
 
             {/* Quick Links */}
             <div className="mt-6 pt-5 border-t border-white/5">
-              <p className="font-accent text-[10px] tracking-widest text-gray-600 mb-3">직접 연락</p>
+              <p className="font-accent text-[10px] tracking-widest text-gray-600 mb-3">운영사</p>
               <div className="space-y-1.5">
                 <a
-                  href="mailto:contact@lumos.art"
+                  href="https://www.thisglobal.kr/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-sm text-gray-400 hover:text-[#D4A843] transition-colors block"
                 >
-                  contact@lumos.art
+                  디스글로벌 (thisglobal.kr)
                 </a>
-                <p className="text-sm text-gray-400">+82-2-1234-5678</p>
               </div>
             </div>
           </div>
