@@ -215,7 +215,7 @@ export default function Header({ currentWorld }: HeaderProps = {}) {
             rel="noopener noreferrer"
             className="font-accent text-xs tracking-widest uppercase transition-colors duration-200 text-gray-400 hover:text-white"
           >
-            DISGLOBAL
+            THISGLOBAL
           </a>
         </nav>
       </div>
