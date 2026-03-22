@@ -1,13 +1,15 @@
-// Artist Upload — 작품 업로드 페이지
+// Artist Upload — 작품 업로드 페이지 (ArtworkContext 연결)
 import React, { useState } from "react";
 import { useLocation } from "wouter";
 import { PortalShell } from "@/components/shells/PortalShell";
 import { useAuth } from "@/contexts/AuthContext";
+import { useArtworks } from "@/contexts/ArtworkContext";
 
 interface UploadForm {
   title: string;
   description: string;
   tags: string;
+  category: string;
   displayType: "Horizontal" | "Vertical";
   worldType: "standard" | "local";
   resolution: string;
@@ -18,6 +20,7 @@ const initialForm: UploadForm = {
   title: "",
   description: "",
   tags: "",
+  category: "Abstract",
   displayType: "Horizontal",
   worldType: "standard",
   resolution: "1920x1080",
@@ -26,6 +29,7 @@ const initialForm: UploadForm = {
 
 export default function ArtistUpload() {
   const { user } = useAuth();
+  const { addArtwork } = useArtworks();
   const [, setLocation] = useLocation();
   const [form, setForm] = useState<UploadForm>(initialForm);
   const [thumbnailName, setThumbnailName] = useState("");
@@ -42,7 +46,28 @@ export default function ArtistUpload() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // 데모: 실제 업로드 없이 성공 표시
+    if (!user) return;
+
+    // ArtworkContext에 실제 데이터 추가
+    addArtwork({
+      title: form.title,
+      description: form.description,
+      category: form.category,
+      tags: form.tags
+        .split(",")
+        .map(t => t.trim())
+        .filter(Boolean),
+      image: "", // 데모: 이미지 없음
+      videoSrc: undefined,
+      displayType: form.displayType,
+      worldType: form.worldType,
+      resolution: form.resolution,
+      runtime: form.runtime || "15",
+      artist: user.name,
+      artistId: user.id,
+      format: "mp4",
+    });
+
     setSubmitted(true);
     setTimeout(() => {
       setLocation("/artist/works");
@@ -55,10 +80,11 @@ export default function ArtistUpload() {
         <div className="flex flex-col items-center justify-center py-24">
           <div className="text-emerald-400 text-4xl mb-4">✓</div>
           <div className="font-display text-xl text-[#f5f5f5] mb-2">
-            작품이 제출되었습니다
+            작품이 저장되었습니다
           </div>
           <div className="text-[#909090] text-sm">
-            관리자 검토 후 결과를 알려드립니다.
+            초안(Draft)으로 저장되었습니다. 내 작품에서 제출할 수
+            있습니다.
           </div>
         </div>
       </PortalShell>
@@ -72,7 +98,8 @@ export default function ArtistUpload() {
           새 작품 업로드
         </div>
         <div className="text-[#909090] text-sm mb-8">
-          작품 정보를 입력하고 제출하세요. 관리자 승인 후 사이트에 게시됩니다.
+          작품 정보를 입력하고 제출하세요. 관리자 승인 후 사이트에
+          게시됩니다.
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -83,13 +110,13 @@ export default function ArtistUpload() {
             </label>
             <div
               className="border-2 border-dashed border-white/10 p-8 text-center cursor-pointer hover:border-[#D4A843]/30 transition-colors"
-              onClick={() => {
-                // 데모: 파일 선택 시뮬레이션
-                setVideoName("my-artwork.mp4");
-              }}
+              onClick={() => setVideoName("my-artwork.mp4")}
             >
               {videoName ? (
-                <div className="text-[#f5f5f5] text-sm">{videoName}</div>
+                <div className="text-[#f5f5f5] text-sm flex items-center justify-center gap-2">
+                  <span className="text-emerald-400">✓</span>
+                  {videoName}
+                </div>
               ) : (
                 <>
                   <div className="text-[#909090] text-2xl mb-2">▲</div>
@@ -114,7 +141,10 @@ export default function ArtistUpload() {
               onClick={() => setThumbnailName("thumbnail.jpg")}
             >
               {thumbnailName ? (
-                <div className="text-[#f5f5f5] text-sm">{thumbnailName}</div>
+                <div className="text-[#f5f5f5] text-sm flex items-center justify-center gap-2">
+                  <span className="text-emerald-400">✓</span>
+                  {thumbnailName}
+                </div>
               ) : (
                 <div className="text-[#909090] text-sm">
                   클릭하여 썸네일 이미지를 선택하세요 (JPG, PNG)
@@ -154,23 +184,50 @@ export default function ArtistUpload() {
             />
           </div>
 
-          {/* 태그 */}
-          <div>
-            <label className="font-accent text-[10px] tracking-[0.4em] uppercase text-[#909090] block mb-2">
-              Tags (쉼표로 구분)
-            </label>
-            <input
-              name="tags"
-              value={form.tags}
-              onChange={handleChange}
-              className="w-full bg-[#1a1a1a] border border-white/10 px-4 py-3 text-[#f5f5f5] text-sm focus:border-[#D4A843] focus:outline-none"
-              placeholder="한국미, 전통, 수묵"
-            />
+          {/* 카테고리 + 태그 */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="font-accent text-[10px] tracking-[0.4em] uppercase text-[#909090] block mb-2">
+                Category
+              </label>
+              <select
+                name="category"
+                value={form.category}
+                onChange={handleChange}
+                className="w-full bg-[#1a1a1a] border border-white/10 px-4 py-3 text-[#f5f5f5] text-sm focus:border-[#D4A843] focus:outline-none"
+              >
+                {[
+                  "Oriental",
+                  "Abstract",
+                  "Cosmic",
+                  "Light",
+                  "Nature",
+                  "Traditional",
+                  "Ambient",
+                  "Seasonal",
+                ].map(c => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="font-accent text-[10px] tracking-[0.4em] uppercase text-[#909090] block mb-2">
+                Tags (쉼표 구분)
+              </label>
+              <input
+                name="tags"
+                value={form.tags}
+                onChange={handleChange}
+                className="w-full bg-[#1a1a1a] border border-white/10 px-4 py-3 text-[#f5f5f5] text-sm focus:border-[#D4A843] focus:outline-none"
+                placeholder="한국미, 전통, 수묵"
+              />
+            </div>
           </div>
 
-          {/* 2열 그리드 */}
+          {/* 2열 그리드: 메타 */}
           <div className="grid grid-cols-2 gap-4">
-            {/* World Type */}
             <div>
               <label className="font-accent text-[10px] tracking-[0.4em] uppercase text-[#909090] block mb-2">
                 World Type
@@ -186,7 +243,6 @@ export default function ArtistUpload() {
               </select>
             </div>
 
-            {/* Display Type */}
             <div>
               <label className="font-accent text-[10px] tracking-[0.4em] uppercase text-[#909090] block mb-2">
                 Display Type
@@ -202,7 +258,6 @@ export default function ArtistUpload() {
               </select>
             </div>
 
-            {/* Resolution */}
             <div>
               <label className="font-accent text-[10px] tracking-[0.4em] uppercase text-[#909090] block mb-2">
                 Resolution
@@ -219,7 +274,6 @@ export default function ArtistUpload() {
               </select>
             </div>
 
-            {/* Runtime */}
             <div>
               <label className="font-accent text-[10px] tracking-[0.4em] uppercase text-[#909090] block mb-2">
                 Runtime (초)
@@ -243,7 +297,7 @@ export default function ArtistUpload() {
               type="submit"
               className="bg-[#D4A843] text-black font-accent text-[10px] tracking-[0.3em] uppercase px-8 py-3 hover:bg-[#F0C060] transition-colors"
             >
-              Submit for Review
+              Save as Draft
             </button>
             <button
               type="button"

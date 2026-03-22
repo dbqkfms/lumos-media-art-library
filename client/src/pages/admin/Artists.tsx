@@ -2,12 +2,12 @@
 import { useMemo } from "react";
 import { PortalShell } from "@/components/shells/PortalShell";
 import { EmptyState } from "@/components/shared/EmptyState";
-import {
-  MOCK_USERS,
-  MOCK_PORTAL_ARTWORKS,
-} from "@/data/mockData";
+import { MOCK_USERS } from "@/data/mockData";
+import { useArtworks } from "@/contexts/ArtworkContext";
 
 export default function Artists() {
+  const { artworks: allArtworks } = useArtworks();
+
   // 아티스트만 필터링
   const artists = useMemo(
     () => MOCK_USERS.filter(u => u.role === "artist"),
@@ -20,7 +20,7 @@ export default function Artists() {
       string,
       { total: number; published: number }
     > = {};
-    MOCK_PORTAL_ARTWORKS.forEach(artwork => {
+    allArtworks.forEach(artwork => {
       const id = artwork.artistId;
       if (!id) return;
       if (!stats[id]) {
@@ -32,7 +32,7 @@ export default function Artists() {
       }
     });
     return stats;
-  }, []);
+  }, [allArtworks]);
 
   // 날짜 포맷 헬퍼
   const formatDate = (dateStr: string) => {

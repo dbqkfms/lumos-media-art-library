@@ -6,6 +6,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { MarketplaceProvider } from "./contexts/MarketplaceContext";
 import { AuthProvider } from "./contexts/AuthContext";
+import { ArtworkProvider } from "./contexts/ArtworkContext";
 import { RoleGuard } from "./components/auth/RoleGuard";
 
 // --- Public Pages ---
@@ -112,12 +113,14 @@ function App() {
     <ErrorBoundary>
       <ThemeProvider defaultTheme="dark">
         <AuthProvider>
-          <MarketplaceProvider>
-            <TooltipProvider>
+          <ArtworkProvider>
+            <MarketplaceProvider>
+              <TooltipProvider>
               <Toaster />
               <Router />
-            </TooltipProvider>
-          </MarketplaceProvider>
+              </TooltipProvider>
+            </MarketplaceProvider>
+          </ArtworkProvider>
         </AuthProvider>
       </ThemeProvider>
     </ErrorBoundary>

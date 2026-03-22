@@ -4,11 +4,8 @@ import { Link } from "wouter";
 import { PortalShell } from "@/components/shells/PortalShell";
 import { MetricCard } from "@/components/shared/MetricCard";
 import { StatusBadge } from "@/components/shared/StatusBadge";
-import {
-  MOCK_PORTAL_ARTWORKS,
-  MOCK_INQUIRIES,
-  MOCK_USERS,
-} from "@/data/mockData";
+import { MOCK_USERS } from "@/data/mockData";
+import { useArtworks } from "@/contexts/ArtworkContext";
 import { INQUIRY_STATUS_LABELS, type InquiryStatus } from "@/types";
 
 const INQUIRY_STATUS_COLORS: Record<
@@ -24,20 +21,23 @@ const INQUIRY_STATUS_COLORS: Record<
 };
 
 export default function Dashboard() {
+  const { artworks, inquiries } = useArtworks();
+
   // 지표 계산
-  const totalArtworks = MOCK_PORTAL_ARTWORKS.length;
-  const pendingReview = MOCK_PORTAL_ARTWORKS.filter(
+  const totalArtworks = artworks.length;
+  const pendingReview = artworks.filter(
     a => a.status === "submitted" || a.status === "under_review"
   ).length;
-  const totalInquiries = MOCK_INQUIRIES.length;
+  const totalInquiries = inquiries.length;
   const registeredArtists = MOCK_USERS.filter(
     u => u.role === "artist"
   ).length;
 
   // 최근 제출/검토 중 작품 (최신 3개)
-  const recentSubmissions = MOCK_PORTAL_ARTWORKS.filter(
-    a => a.status === "submitted" || a.status === "under_review"
-  )
+  const recentSubmissions = artworks
+    .filter(
+      a => a.status === "submitted" || a.status === "under_review"
+    )
     .sort(
       (a, b) =>
         new Date(b.submittedAt || "").getTime() -
@@ -46,11 +46,13 @@ export default function Dashboard() {
     .slice(0, 3);
 
   // 최근 문의 (최신 3개)
-  const recentInquiries = MOCK_INQUIRIES.sort(
-    (a, b) =>
-      new Date(b.createdAt).getTime() -
-      new Date(a.createdAt).getTime()
-  ).slice(0, 3);
+  const recentInquiries = [...inquiries]
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() -
+        new Date(a.createdAt).getTime()
+    )
+    .slice(0, 3);
 
   return (
     <PortalShell role="admin" title="Dashboard">

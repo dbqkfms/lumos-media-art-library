@@ -5,16 +5,16 @@ import { PortalShell } from "@/components/shells/PortalShell";
 import { MetricCard } from "@/components/shared/MetricCard";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { useAuth } from "@/contexts/AuthContext";
-import { MOCK_PORTAL_ARTWORKS } from "@/data/mockData";
+import { useArtworks } from "@/contexts/ArtworkContext";
 
 export default function ArtistDashboard() {
   const { user } = useAuth();
+  const { getArtworksByArtist } = useArtworks();
 
   // 현재 아티스트의 작품만 필터링
   const myArtworks = useMemo(
-    () =>
-      MOCK_PORTAL_ARTWORKS.filter(a => a.artistId === user?.id),
-    [user?.id]
+    () => getArtworksByArtist(user?.id ?? ""),
+    [user?.id, getArtworksByArtist]
   );
 
   // 상태별 카운트

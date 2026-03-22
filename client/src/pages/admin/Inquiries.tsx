@@ -2,7 +2,7 @@
 import { useState, useMemo } from "react";
 import { PortalShell } from "@/components/shells/PortalShell";
 import { EmptyState } from "@/components/shared/EmptyState";
-import { MOCK_INQUIRIES } from "@/data/mockData";
+import { useArtworks } from "@/contexts/ArtworkContext";
 import {
   INQUIRY_STATUS_LABELS,
   type Inquiry,
@@ -109,6 +109,8 @@ function Toast({
 }
 
 export default function Inquiries() {
+  const { inquiries: contextInquiries } = useArtworks();
+
   // 탭 필터 상태
   const [activeTab, setActiveTab] =
     useState<TabFilter>("all");
@@ -116,7 +118,7 @@ export default function Inquiries() {
   // 로컬 상태로 문의 데이터 관리 (상태/노트 변경 반영)
   const [inquiries, setInquiries] = useState<Inquiry[]>(
     () =>
-      [...MOCK_INQUIRIES].sort(
+      [...contextInquiries].sort(
         (a, b) =>
           new Date(b.createdAt).getTime() -
           new Date(a.createdAt).getTime()

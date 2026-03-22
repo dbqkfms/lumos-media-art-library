@@ -1,14 +1,12 @@
-// Admin ArtworkReview — 관리자 작품 상세/검토 페이지
+// Admin ArtworkReview — 관리자 작품 상세/검토 페이지 (ArtworkContext 연결)
 import { useState } from "react";
 import { useRoute, Link } from "wouter";
 import { PortalShell } from "@/components/shells/PortalShell";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { StatusTimeline } from "@/components/shared/StatusTimeline";
-import {
-  MOCK_PORTAL_ARTWORKS,
-  VALID_TRANSITIONS,
-} from "@/data/mockData";
-import type { ArtworkStatus } from "@/types";
+import { useAuth } from "@/contexts/AuthContext";
+import { useArtworks } from "@/contexts/ArtworkContext";
+import { VALID_TRANSITIONS } from "@/data/mockData";
 
 const WORLD_LABELS: Record<string, string> = {
   standard: "STANDARD",
@@ -23,9 +21,14 @@ const TIER_OPTIONS: { value: "A" | "B" | "C"; label: string }[] = [
 
 export default function ArtworkReview() {
   const [match, params] = useRoute("/admin/artworks/:id");
-  const artwork = MOCK_PORTAL_ARTWORKS.find(
-    a => a.id === params?.id
-  );
+  const { user } = useAuth();
+  const {
+    getArtwork,
+    updateArtworkStatus,
+    updateArtworkTier,
+  } = useArtworks();
+
+  const artwork = getArtwork(params?.id ?? "");
 
   const [reviewNote, setReviewNote] = useState("");
   const [selectedTier, setSelectedTier] = useState<
@@ -64,34 +67,63 @@ export default function ArtworkReview() {
     artwork.status === "submitted" ||
     artwork.status === "under_review";
   const canPublish = artwork.status === "approved";
+  const adminId = user?.id ?? "admin-001";
 
-  // 검토 액션 핸들러
-  const handleApprove = () => {
-    window.alert(
-      `"${artwork.title}" 승인 완료!\n큐레이션 등급: ${selectedTier}\n${reviewNote ? `메모: ${reviewNote}` : ""}`
-    );
-    setActionDone("approved");
-    setReviewNote("");
-  };
-
-  const handleRequestChanges = () => {
-    if (!reviewNote.trim()) {
-      window.alert("수정 요청 시 메모를 입력해 주세요.");
-      return;
+  // 검토 시작 (submitted → under_review 자동 전이)
+  const ensureUnderReview = () => {
+    if (artwork.status === "submitted") {
+      updateArtworkStatus(
+        artwork.id,
+        "under_review",
+        adminId,
+        "검토 시작"
+      );
     }
-    window.alert(
-      `"${artwork.title}" 수정 요청 전달!\n메모: ${reviewNote}`
-    );
-    setActionDone("changes_requested");
-    setReviewNote("");
   };
 
-  const handleReject = () => {
-    window.alert(
-      `"${artwork.title}" 반려 처리!\n${reviewNote ? `사유: ${reviewNote}` : ""}`
+  // 승인 핸들러
+  const handleApprove = () => {
+    ensureUnderReview();
+    updateArtworkTier(artwork.id, selectedTier);
+    const success = updateArtworkStatus(
+      artwork.id,
+      "approved",
+      adminId,
+      reviewNote || `큐레이션 등급: ${selectedTier}. 승인 완료.`
     );
-    setActionDone("rejected");
-    setReviewNote("");
+    if (success) {
+      setActionDone("approved");
+      setReviewNote("");
+    }
+  };
+
+  // 수정 요청 핸들러
+  const handleRequestChanges = () => {
+    if (!reviewNote.trim()) return;
+    ensureUnderReview();
+    const success = updateArtworkStatus(
+      artwork.id,
+      "changes_requested",
+      adminId,
+      reviewNote
+    );
+    if (success) {
+      setActionDone("changes_requested");
+      setReviewNote("");
+    }
+  };
+
+  // 발행 핸들러
+  const handlePublish = () => {
+    const success = updateArtworkStatus(
+      artwork.id,
+      "published",
+      adminId,
+      "사이트에 발행"
+    );
+    if (success) {
+      setActionDone("published");
+    }
   };
 
   // 날짜 포맷
@@ -122,17 +154,21 @@ export default function ArtworkReview() {
         <div className="lg:col-span-2 space-y-6">
           {/* 프리뷰 이미지 */}
           <div className="bg-[#0f0f0f] border border-white/5 aspect-video flex items-center justify-center overflow-hidden">
-            <img
-              src={artwork.image}
-              alt={artwork.title}
-              className="w-full h-full object-contain"
-              onError={e => {
-                const el = e.target as HTMLImageElement;
-                el.style.display = "none";
-                el.parentElement!.innerHTML =
-                  '<div class="text-[#909090] font-accent text-xs">미리보기 없음</div>';
-              }}
-            />
+            {artwork.image ? (
+              <img
+                src={artwork.image}
+                alt={artwork.title}
+                className="w-full h-full object-contain"
+                onError={e => {
+                  const el = e.target as HTMLImageElement;
+                  el.style.display = "none";
+                }}
+              />
+            ) : (
+              <div className="text-[#909090] font-accent text-xs">
+                미리보기 없음
+              </div>
+            )}
           </div>
 
           {/* 기본 정보 */}
@@ -302,15 +338,10 @@ export default function ArtworkReview() {
                 </button>
                 <button
                   onClick={handleRequestChanges}
-                  className="w-full bg-transparent text-amber-400 font-accent text-[10px] tracking-[0.3em] uppercase px-4 py-3 border border-amber-400/30 hover:border-amber-400/60 hover:bg-amber-400/5 transition-colors"
+                  disabled={!reviewNote.trim()}
+                  className="w-full bg-transparent text-amber-400 font-accent text-[10px] tracking-[0.3em] uppercase px-4 py-3 border border-amber-400/30 hover:border-amber-400/60 hover:bg-amber-400/5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   수정 요청
-                </button>
-                <button
-                  onClick={handleReject}
-                  className="w-full bg-transparent text-red-400 font-accent text-[10px] tracking-[0.3em] uppercase px-4 py-3 border border-red-400/30 hover:border-red-400/60 hover:bg-red-400/5 transition-colors"
-                >
-                  반려
                 </button>
               </div>
             </div>
@@ -324,12 +355,17 @@ export default function ArtworkReview() {
               </div>
               <p className="text-[#e0e0e0] text-sm">
                 {actionDone === "approved" &&
-                  "작품이 승인되었습니다."}
+                  "작품이 승인되었습니다. 발행 대기 상태입니다."}
                 {actionDone === "changes_requested" &&
                   "수정 요청이 아티스트에게 전달되었습니다."}
-                {actionDone === "rejected" &&
-                  "작품이 반려 처리되었습니다."}
+                {actionDone === "published" &&
+                  "작품이 사이트에 발행되었습니다."}
               </p>
+              <Link to="/admin/artworks">
+                <span className="inline-block mt-3 font-accent text-[10px] tracking-[0.3em] uppercase text-emerald-400 hover:text-emerald-300 cursor-pointer transition-colors">
+                  목록으로 돌아가기 →
+                </span>
+              </Link>
             </div>
           )}
 
@@ -340,12 +376,7 @@ export default function ArtworkReview() {
                 발행 관리
               </h3>
               <button
-                onClick={() => {
-                  window.alert(
-                    `"${artwork.title}" 발행 완료!`
-                  );
-                  setActionDone("published");
-                }}
+                onClick={handlePublish}
                 className="w-full bg-blue-600 text-white font-accent text-[10px] tracking-[0.3em] uppercase px-4 py-3 hover:bg-blue-500 transition-colors"
               >
                 사이트에 발행

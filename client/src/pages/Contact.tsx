@@ -1,6 +1,7 @@
 // Contact — 문의 풀페이지 (2컬럼 레이아웃)
 import React, { useState } from "react";
 import Header from "@/components/Header";
+import { useArtworks } from "@/contexts/ArtworkContext";
 
 const SPACE_TYPES = [
   { value: "", label: "공간 유형 선택" },
@@ -14,6 +15,7 @@ const SPACE_TYPES = [
 ];
 
 export default function Contact() {
+  const { addInquiry } = useArtworks();
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -34,7 +36,16 @@ export default function Contact() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // 데모: 제출 성공 표시
+    // ArtworkContext에 문의 추가
+    addInquiry({
+      buyerName: form.name,
+      buyerEmail: form.email,
+      buyerCompany: form.name,
+      spaceType: form.spaceType || undefined,
+      artworkTitle: form.artworkInterest || undefined,
+      message: form.message,
+      status: "new",
+    });
     setSubmitted(true);
   };
 

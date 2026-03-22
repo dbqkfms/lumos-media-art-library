@@ -4,7 +4,7 @@ import { Link } from "wouter";
 import { PortalShell } from "@/components/shells/PortalShell";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { EmptyState } from "@/components/shared/EmptyState";
-import { MOCK_PORTAL_ARTWORKS } from "@/data/mockData";
+import { useArtworks } from "@/contexts/ArtworkContext";
 import type { ArtworkStatus } from "@/types";
 
 type TabFilter =
@@ -34,11 +34,12 @@ const WORLD_LABELS: Record<string, string> = {
 };
 
 export default function Artworks() {
+  const { artworks: allArtworks } = useArtworks();
   const [activeTab, setActiveTab] = useState<TabFilter>("all");
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredArtworks = useMemo(() => {
-    return MOCK_PORTAL_ARTWORKS.filter(artwork => {
+    return allArtworks.filter(artwork => {
       // 탭 필터
       if (activeTab !== "all" && artwork.status !== activeTab) {
         return false;
@@ -60,10 +61,10 @@ export default function Artworks() {
     );
   }, [activeTab, searchTerm]);
 
-  // 각 탭별 개수
+  // 각 탭별 개수 (ArtworkContext 기반)
   const counts = useMemo(() => {
     const c: Record<TabFilter, number> = {
-      all: MOCK_PORTAL_ARTWORKS.length,
+      all: allArtworks.length,
       submitted: 0,
       under_review: 0,
       approved: 0,
@@ -73,13 +74,13 @@ export default function Artworks() {
       hidden: 0,
       archived: 0,
     };
-    MOCK_PORTAL_ARTWORKS.forEach(a => {
+    allArtworks.forEach(a => {
       if (a.status in c) {
         c[a.status as TabFilter]++;
       }
     });
     return c;
-  }, []);
+  }, [allArtworks]);
 
   return (
     <PortalShell role="admin" title="Artworks">

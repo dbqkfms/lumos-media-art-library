@@ -5,7 +5,7 @@ import { PortalShell } from "@/components/shells/PortalShell";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { useAuth } from "@/contexts/AuthContext";
-import { MOCK_PORTAL_ARTWORKS } from "@/data/mockData";
+import { useArtworks } from "@/contexts/ArtworkContext";
 import type { ArtworkStatus } from "@/types";
 
 // 탭 필터 정의
@@ -34,15 +34,15 @@ const TAB_STATUS_MAP: Record<TabFilter, ArtworkStatus[] | null> =
 
 export default function ArtistWorks() {
   const { user } = useAuth();
+  const { getArtworksByArtist } = useArtworks();
   const [, setLocation] = useLocation();
   const [activeTab, setActiveTab] =
     useState<TabFilter>("all");
 
-  // 현재 아티스트의 작품만 필터링
+  // 현재 아티스트의 작품만 필터링 (ArtworkContext)
   const myArtworks = useMemo(
-    () =>
-      MOCK_PORTAL_ARTWORKS.filter(a => a.artistId === user?.id),
-    [user?.id]
+    () => getArtworksByArtist(user?.id ?? ""),
+    [user?.id, getArtworksByArtist]
   );
 
   // 탭 필터 적용

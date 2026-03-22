@@ -5,24 +5,21 @@ import { PortalShell } from "@/components/shells/PortalShell";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { StatusTimeline } from "@/components/shared/StatusTimeline";
 import { useAuth } from "@/contexts/AuthContext";
-import {
-  MOCK_PORTAL_ARTWORKS,
-  VALID_TRANSITIONS,
-} from "@/data/mockData";
+import { useArtworks } from "@/contexts/ArtworkContext";
+import { VALID_TRANSITIONS } from "@/data/mockData";
 
 export default function WorkDetail() {
   const { user } = useAuth();
+  const { getArtwork, updateArtworkStatus } = useArtworks();
   const [, setLocation] = useLocation();
   const [match, params] = useRoute("/artist/works/:id");
   const [actionDone, setActionDone] = useState(false);
 
-  // 작품 조회
+  // 작품 조회 (ArtworkContext에서 실시간)
   const artwork = useMemo(() => {
     if (!params?.id) return null;
-    return MOCK_PORTAL_ARTWORKS.find(
-      a => a.id === params.id
-    );
-  }, [params?.id]);
+    return getArtwork(params.id) ?? null;
+  }, [params?.id, getArtwork]);
 
   // 소유권 확인
   const isOwner =
@@ -82,12 +79,23 @@ export default function WorkDetail() {
     artwork.status === "changes_requested";
   const validNext = VALID_TRANSITIONS[artwork.status];
 
-  // 제출/재제출 액션 핸들러 (데모)
+  // 제출/재제출 액션 핸들러 (ArtworkContext에서 실제 상태 변경)
   const handleSubmitAction = () => {
-    setActionDone(true);
-    setTimeout(() => {
-      setLocation("/artist/works");
-    }, 2000);
+    if (!artwork || !user) return;
+    const success = updateArtworkStatus(
+      artwork.id,
+      "submitted",
+      user.id,
+      artwork.status === "changes_requested"
+        ? "수정 완료 후 재제출합니다"
+        : undefined
+    );
+    if (success) {
+      setActionDone(true);
+      setTimeout(() => {
+        setLocation("/artist/works");
+      }, 2000);
+    }
   };
 
   // 액션 완료 메시지
