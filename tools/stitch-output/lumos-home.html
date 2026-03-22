@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LUMOS | Digital Art Curator</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,700;1,400;1,700&amp;family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-lowest": "#0e0e0e",
+                        "surface-dim": "#131313",
+                        "error-container": "#93000a",
+                        "inverse-primary": "#795900",
+                        "on-error-container": "#ffdad6",
+                        "primary-container": "#d4a843",
+                        "on-tertiary-container": "#1b407f",
+                        "outline": "#9a8f7d",
+                        "surface-container": "#201f1f",
+                        "background": "#131313",
+                        "inverse-on-surface": "#313030",
+                        "on-tertiary-fixed": "#001a42",
+                        "primary-fixed": "#ffdf9f",
+                        "surface": "#131313",
+                        "on-surface-variant": "#d2c5b1",
+                        "primary": "#f2c35b",
+                        "on-error": "#690005",
+                        "on-tertiary": "#002e6a",
+                        "secondary": "#ddc393",
+                        "secondary-container": "#584721",
+                        "secondary-fixed": "#fadfad",
+                        "on-tertiary-fixed-variant": "#214584",
+                        "tertiary-fixed-dim": "#aec6ff",
+                        "outline-variant": "#4e4636",
+                        "on-secondary-container": "#ceb586",
+                        "on-secondary-fixed": "#261a00",
+                        "inverse-surface": "#e5e2e1",
+                        "on-primary-fixed": "#261a00",
+                        "surface-tint": "#eec058",
+                        "surface-bright": "#3a3939",
+                        "on-primary-container": "#553e00",
+                        "surface-variant": "#353534",
+                        "on-background": "#e5e2e1",
+                        "tertiary": "#b3caff",
+                        "on-secondary-fixed-variant": "#56441f",
+                        "secondary-fixed-dim": "#ddc393",
+                        "tertiary-fixed": "#d8e2ff",
+                        "surface-container-high": "#2a2a2a",
+                        "on-primary": "#402d00",
+                        "error": "#ffb4ab",
+                        "on-secondary": "#3d2e0a",
+                        "tertiary-container": "#8eaef4",
+                        "surface-container-highest": "#353534",
+                        "on-surface": "#e5e2e1",
+                        "surface-container-low": "#1c1b1b",
+                        "primary-fixed-dim": "#eec058",
+                        "on-primary-fixed-variant": "#5b4300"
+                    },
+                    fontFamily: {
+                        "headline": ["Newsreader", "serif"],
+                        "body": ["Manrope", "sans-serif"],
+                        "label": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0px",
+                        "lg": "0px",
+                        "xl": "0px",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .gilded-glow:hover {
+            box-shadow: 0 0 8px 2px rgba(242, 195, 91, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-[#0a0a0a] text-on-surface font-body selection:bg-primary selection:text-on-primary">
+<!-- TopAppBar Component -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a] flex justify-between items-center w-full px-8 py-6">
+<div class="text-2xl font-headline font-bold text-[#D4A843] tracking-tight">LUMOS</div>
+<div class="hidden md:flex items-center gap-12 font-label uppercase tracking-widest text-sm">
+<a class="text-[#9a8f7d] hover:text-[#f2c35b] transition-colors duration-300" href="#">Library</a>
+<a class="text-[#9a8f7d] hover:text-[#f2c35b] transition-colors duration-300" href="#">For Spaces</a>
+<a class="text-[#9a8f7d] hover:text-[#f2c35b] transition-colors duration-300" href="#">Pricing</a>
+<a class="text-[#9a8f7d] hover:text-[#f2c35b] transition-colors duration-300" href="#">About</a>
+</div>
+<div class="flex items-center gap-6">
+<button class="font-label uppercase tracking-widest text-sm text-[#D4A843] hover:text-[#f2c35b] transition-colors">Sign In</button>
+<span class="material-symbols-outlined text-[#D4A843] cursor-pointer">menu</span>
+</div>
+</nav>
+<main class="pt-0">
+<!-- Hero Section -->
+<section class="relative h-screen w-full overflow-hidden bg-surface-container-lowest">
+<div class="absolute inset-0 w-full h-full">
+<img alt="Cinematic abstract digital art background" class="w-full h-full object-cover opacity-60 scale-105" data-alt="Abstract fluid golden and dark cosmic flows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeufBhWMRSDmxpAyeyBSUclTRQyNqG_183VPq3ApssiCGyukyJ4-cw2gSdwQCo1r0hTonjnxmB4fxMmZxwTT2OBuZp64yAOrDJBsQVIpt2U4YxpL2ykVzJa-msKwiAzr5JmOtPMtasSmUqV6E6VHlXakrccCZkbFpefoZtlvhJM0QyYGtL0qwfnVKDOorkiCVPJtgsJ8TSJKZ-vGaOSGK_xpeuI-PyFijXKSlSAusGqLxWjhN_me262J8zS9qWO0vNM35d3IR3qps"/>
+<div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent"></div>
+</div>
+<div class="relative h-full flex flex-col justify-end px-8 md:px-16 pb-24 max-w-7xl">
+<div class="space-y-2 mb-4">
+<span class="font-label uppercase tracking-[0.3em] text-primary text-xs font-bold">Featured Installation</span>
+<h1 class="font-headline italic text-6xl md:text-9xl text-on-surface leading-none tracking-tighter">
+                        AETHER: THE BEGINNING
+                    </h1>
+<p class="font-headline text-2xl text-outline italic">By Lumos Studio</p>
+</div>
+<div class="flex flex-wrap gap-4 mt-8">
+<button class="bg-primary text-on-primary px-10 py-4 font-label uppercase tracking-widest text-sm font-extrabold gilded-glow transition-all active:scale-95">
+                        Watch Preview
+                    </button>
+<button class="border border-outline text-on-surface px-10 py-4 font-label uppercase tracking-widest text-sm font-bold hover:bg-on-surface hover:text-surface transition-all active:scale-95">
+                        License This
+                    </button>
+</div>
+</div>
+</section>
+<!-- Content Sections -->
+<div class="space-y-24 py-24 bg-[#0a0a0a]">
+<!-- Row: LUMOS Originals -->
+<section class="pl-8 md:pl-16">
+<div class="flex justify-between items-end pr-8 md:pr-16 mb-8">
+<h2 class="font-headline italic text-4xl text-on-surface">LUMOS Originals</h2>
+<a class="font-label uppercase tracking-widest text-xs text-outline hover:text-primary transition-colors" href="#">View All</a>
+</div>
+<div class="flex gap-6 overflow-x-auto hide-scrollbar pb-8">
+<!-- Card 1 -->
+<div class="min-w-[450px] group cursor-pointer">
+<div class="relative aspect-video bg-surface-container overflow-hidden">
+<img alt="Artwork thumbnail" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Vibrant digital art with geometric structures" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrY2KyDoXaiAIgqL1tMTezgGEX023MwonxXLTj0N3X-y_QMes4Wi0PRo-iGyNWrU1TPeBesdVeaawffxxxrmEP8BY3uCwUxlI8Vkeh4dBPYoHRGoEeYCbwwrvmfx_vaEBUrT24RvnZMR1XfmFO6xq_V3ckiACKW8_4fTv-1O2ipi_oxRXSaRLdlUeiab9PVo4Of00D2SHcxwGb-UBD_m7E4-9EiKQqMHBtdW5ZasAONmp62T-Ff6XQRMaeS44ssJYWAWj1CnDGM34"/>
+<div class="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 border border-primary/30">
+<span class="font-label text-[10px] text-primary uppercase tracking-widest">08:45</span>
+</div>
+</div>
+<div class="mt-4">
+<h3 class="font-body text-lg text-on-surface font-bold tracking-tight">SYNTHETIC DREAMS</h3>
+<p class="font-body text-sm text-outline">MARCUS VANE</p>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="min-w-[450px] group cursor-pointer">
+<div class="relative aspect-video bg-surface-container overflow-hidden">
+<img alt="Artwork thumbnail" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Monolithic structure in a digital void" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-WILA_xnk1tvuRXLfXgTjvgWrT9Dc4JGvXOEGXhKaTsuhRr2XzfH8Imr_cTJhXtdVLloP8447dH2W5mXuVtoCbgcdpH3EByvpGfPJxFLlwYI6h1Bj5lNcyePjbvpwExXpFeLmcLt9TyCfVHQrjexX0D32CYy9uQf9RC0PCnx9EgCuXdJE8O7jQA3SZYC2pbmoNny1ZgRipAZoiDTc_EGUCqNddjluSgOXIOAqvrEvuw7ATJTLpF-JFFxpR6MpyZAphcnq2_4p0SA"/>
+<div class="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 border border-primary/30">
+<span class="font-label text-[10px] text-primary uppercase tracking-widest">12:00</span>
+</div>
+</div>
+<div class="mt-4">
+<h3 class="font-body text-lg text-on-surface font-bold tracking-tight">MONOLITH IV</h3>
+<p class="font-body text-sm text-outline">STUDIO ELYSIUM</p>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="min-w-[450px] group cursor-pointer">
+<div class="relative aspect-video bg-surface-container overflow-hidden">
+<img alt="Artwork thumbnail" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Abstract colorful waves of digital light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrL0X_Zdu_HfoG0UI9kAF03EGoFNej6ikCsI4l6G-kihu4SlcCTxvLK9P043fbO82viivir5vG_oTnFG6FsqHtrsJA9x3b3L8eIQV9-6dgI7TV7V-Ta2yaOVDPXhx3Zt7bOK3k9dV01zBFijOCjBEYdyth2sWPLSDDueUVNIEsdBroJUxWV7FAc0clOVmgoO4LNKaM5XmT-UsrMBuLFhhS1lSLXZDOCIh7CJPcc_-8NObi5qN8tYAmu-IvN_mbHOThDJvNHKMTgVc"/>
+<div class="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 border border-primary/30">
+<span class="font-label text-[10px] text-primary uppercase tracking-widest">05:30</span>
+</div>
+</div>
+<div class="mt-4">
+<h3 class="font-body text-lg text-on-surface font-bold tracking-tight">CHROMATIC FLOW</h3>
+<p class="font-body text-sm text-outline">SOPHIA CHEN</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Row: Trending Now -->
+<section class="pl-8 md:pl-16">
+<div class="flex justify-between items-end pr-8 md:pr-16 mb-8">
+<h2 class="font-headline italic text-4xl text-on-surface">Trending Now</h2>
+</div>
+<div class="flex gap-6 overflow-x-auto hide-scrollbar">
+<div class="min-w-[320px] group cursor-pointer">
+<div class="aspect-[4/5] bg-surface-container-low overflow-hidden">
+<img alt="Artwork thumbnail" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Vibrant vertical abstract gradient patterns" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvXdUd-EZFWXkQQQ9l_OKzu9hAzGJ-K1fbwg0ITSQY1L60X3h_bAi061B1DAnaxRauAe5skPpFyIYvS-QSUaIUv_3Dakb3q3sZjefs7E_JqooTflc743t4PKjkGisIdruCNnlwywNibI3ojZDRWKrAe_ph42GBlZfvJBt99GnXaYla9oQGMYci0fJH2z7H5ctKrVWzmE6KiH6v13BDR9NjN8EPObbTNSasDS_2aLEVQDZgkTvazHhsWvjOKIQfO7XB0ZTLVSYXqc8"/>
+</div>
+<div class="mt-4">
+<div class="flex justify-between items-start">
+<h3 class="font-body text-md text-on-surface font-bold uppercase tracking-tight">Pulse 01</h3>
+<span class="font-label text-[10px] text-primary border border-primary/40 px-2 py-0.5">4K</span>
+</div>
+<p class="font-body text-xs text-outline mt-1 uppercase tracking-widest">Vivid Motion</p>
+</div>
+</div>
+<!-- Repeated Item for Row Density -->
+<div class="min-w-[320px] group cursor-pointer">
+<div class="aspect-[4/5] bg-surface-container-low overflow-hidden">
+<img alt="Artwork thumbnail" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Minimalist digital composition with red dot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbsHFgAn2j19U1F0b5vCSKADcVXDXtB1_8NE1hbFtT4oDAEes7GSZU1vac91fTR-jztmyKp3XEyp3H-_nA84_kHu4rLMNxnd-s1sWrAc9BaazqprxoxxI6DThnitZ28D978pANSWpFOZxXBiP7bQddZ-Wty0IV76JiX6gkP6wQZlfmgFkVGT29AY7oKzvSQhIDjRj97jeN-K280InrqHxeWegOaHKSvJxTRv6zDKq8iItqKeJR9XXVNHtJBQ5e7ieVd091j0OplmE"/>
+</div>
+<div class="mt-4">
+<div class="flex justify-between items-start">
+<h3 class="font-body text-md text-on-surface font-bold uppercase tracking-tight">Void Circle</h3>
+<span class="font-label text-[10px] text-primary border border-primary/40 px-2 py-0.5">8K</span>
+</div>
+<p class="font-body text-xs text-outline mt-1 uppercase tracking-widest">Nihilist Art</p>
+</div>
+</div>
+<div class="min-w-[320px] group cursor-pointer">
+<div class="aspect-[4/5] bg-surface-container-low overflow-hidden">
+<img alt="Artwork thumbnail" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Explosive digital paint splash" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmUiemEY9hosT_MUmPvPT8MgoSuJWvv5JGzPmxAmZgXzA8ZXnjeDH8L9vL14XFBrr2bJsLSSazRH5VWta4yWsOBdUbhnZaTbirW8a4egT0XU0Z3HErc3PePbs4O0puru9yrAwFaT9mn4emNKIXmzR5BOGR-SlDwWefMXkDX2E0-E2HkevG2eRU_UF8ZxM4UXM0W6aQoDyLkbVh45uYRoQmL-sOPnnuOLgLMEbzlyJRvMl7vxTMVQxcDshVhGsJ9s0KjeQSNDrWk6I"/>
+</div>
+<div class="mt-4">
+<div class="flex justify-between items-start">
+<h3 class="font-body text-md text-on-surface font-bold uppercase tracking-tight">Impact</h3>
+<span class="font-label text-[10px] text-primary border border-primary/40 px-2 py-0.5">HDR</span>
+</div>
+<p class="font-body text-xs text-outline mt-1 uppercase tracking-widest">Kinetic Studio</p>
+</div>
+</div>
+<div class="min-w-[320px] group cursor-pointer">
+<div class="aspect-[4/5] bg-surface-container-low overflow-hidden">
+<img alt="Artwork thumbnail" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Dark aesthetic geometric digital pattern" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYGIwH_NNpBI9zcXHHf36kdzFNRKf5us3QV63oCJOzGp2LRkec_XeNWdXIwXt4lo_V3xLRX1nsYhUrRhCEBIStYXUYRqmdce7ZKLr6b0wSl3Q36kKueOCZMkAXm7H99xAxp_oS6DU2_h-MpVVjcDpseZ_Vkwoi8zlITIcHzd6YAp47RF5ykWNdf3Gt0r1JLrOzmfJtr54eeLVbG40P19EE2vOLBPtepmAU_ZEIS-WAAe8F-BbSAfcLBlpo7N0neaM8FZ87Joqq6Z0"/>
+</div>
+<div class="mt-4">
+<div class="flex justify-between items-start">
+<h3 class="font-body text-md text-on-surface font-bold uppercase tracking-tight">Substrate</h3>
+<span class="font-label text-[10px] text-primary border border-primary/40 px-2 py-0.5">4K</span>
+</div>
+<p class="font-body text-xs text-outline mt-1 uppercase tracking-widest">Grid Collective</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Row: Korean Heritage (Bento Style Variation) -->
+<section class="px-8 md:px-16">
+<div class="mb-12">
+<h2 class="font-headline italic text-4xl text-on-surface">Korean Heritage</h2>
+<p class="font-body text-outline mt-2 tracking-wide text-sm max-w-xl uppercase">Traditional aesthetics re-imagined through modern digital algorithms.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="md:col-span-2 group cursor-pointer bg-surface-container-low">
+<div class="relative aspect-video overflow-hidden">
+<img alt="Korean palace artwork" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" data-alt="Traditional Korean architecture in digital sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMId9tCgdqitoxSWejHa11-o_UzsVLOoPdWv6VFiUUEqEnllUVt2UyOSI6EHy0An6LY7xZAxhjOQN3iiokq8VvKkNk8ojEQsKGtJqw5FhEEUdg--K96VDoBZDobRU-PDR9NIKykz7t20kvnXEGb092vc0g9BXLnkx1vj17sUsq83lCMfGphkYjLE0YMVRQ8h_vHy-xM_k2bPrIwsgOghaUk462hv5K26P3XN7qV-ZPnbpUkR2wLJoGQhHKS7R4Da9y1Vu_PfJ7Hv0"/>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors"></div>
+</div>
+<div class="p-6">
+<h3 class="font-headline text-2xl italic">DANCHEONG: SYMMETRY</h3>
+<p class="text-xs font-label uppercase text-outline mt-1">SEOUL MEDIA LAB · 15:00</p>
+</div>
+</div>
+<div class="group cursor-pointer bg-surface-container-low">
+<div class="relative aspect-square overflow-hidden">
+<img alt="Asian ink wash style" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" data-alt="Digital ink wash mountain landscape" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzuqvLjb76fofTXFjz4KWwkf6JBd_zPEeKB7dgT4MTwzG5CMg90VUFYkAfUHCKgFcawmlkK7Is9AvgAxdJoTKamGspf4JjEYjviQS1suY4RqISeB7DFEiowHoSMB_lDZ_0W4rhRFrOUYZn_q4SPFQW9a7D1b1lvKD08vziPjJZD3k728OA2WX6h0IGZedLBzDqbSB44T8LjlhxqyZBc2_3uKJ1B5GSoOhfFA6nZtHbqBrqUXMhdWVxoZZsfGBYoGQ1N8yldmF-SOs"/>
+</div>
+<div class="p-4">
+<h3 class="font-body font-bold text-sm uppercase">Ink Flow V.2</h3>
+<p class="text-[10px] font-label text-outline uppercase tracking-tighter">Kim Jong-Un Studio</p>
+</div>
+</div>
+<div class="group cursor-pointer bg-surface-container-low">
+<div class="relative aspect-square overflow-hidden">
+<img alt="Traditional silk patterns" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" data-alt="Abstracted traditional silk textile patterns" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4lXsHX3-05gaG3f-ZeqqXkSndSInQsbCl1QhXaTY74WGkOYsU9bwJTwxYmnI1rBfDJ_lhTKZ5_p3hCuT_jaV0Ban0aShu0QYUtav1HdhZGoAyD_WZUJ10g0rOjxjSEAj8s9vehi8izwydwbkvt_cyIa4qdPzWjQVLuWI9_NCAHMlMqY3L1m1caAAmnDjRQvQOlVzeYDWIv7nqu21OjU-cOdQdto-SwkCHMCkc5JBD_mL2TAC2JidB4iqlhnBKqzKSQGel2OpsIQo"/>
+</div>
+<div class="p-4">
+<h3 class="font-body font-bold text-sm uppercase">Silk Weaver</h3>
+<p class="text-[10px] font-label text-outline uppercase tracking-tighter">Heritage Digitals</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Row: Abstract & Cosmic -->
+<section class="pl-8 md:pl-16">
+<div class="mb-8">
+<h2 class="font-headline italic text-4xl text-on-surface">Abstract &amp; Cosmic</h2>
+</div>
+<div class="flex gap-1 overflow-x-auto hide-scrollbar">
+<!-- Ultra Cinematic horizontal strips -->
+<div class="min-w-[600px] relative h-80 group cursor-pointer overflow-hidden">
+<img alt="Nebula artwork" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000" data-alt="Distant colorful nebula in deep space" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOAPYjjTJRk_XD0a4ci3cVz3kMgPzk4WnLu8DMcZRjrCbWxni5qrel-qb0VV4um2XBERx_wZJjPg0siMnfV0q_94U6MToqc9SKsyDqLFjfAeVwd5dpA6Z7s42Ff642JThqlDqUCoiavg4oWpT6_yTPg8Lj843NJEsDvp6y4VL0-y8o6TzfiU4hbZY9CLnpeR3SxqbVDrGOumU-zCEMfmOmE12D4UarhEbvJ5mV3Kuo4ROdhRBDxrdg9OoPZl1lJQlHQqMoEBC38Pw"/>
+<div class="absolute bottom-0 left-0 p-8 bg-gradient-to-t from-black/80 to-transparent w-full">
+<h3 class="font-headline text-3xl italic">NEBULA CORE</h3>
+<p class="font-label text-xs uppercase text-primary tracking-widest mt-1">Universal Pictures Art · 24:00</p>
+</div>
+</div>
+<div class="min-w-[600px] relative h-80 group cursor-pointer overflow-hidden">
+<img alt="Starfield artwork" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000" data-alt="Dense starfield with cosmic dust clouds" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBs0KQq4WJfCP1lDsxx87kYulDojkUgvquGxPtU1soIg69z5tAKrjVyZUJab1BGS0c2ArtMcO2S1jJEY0JsVf_PIY-uKf0VWG7MgkFOH_lkN4Vkec5Mq7WhU5scgq6XJYtJkiiKg31aGqZwDFxXMBfAmPEHBRt1dJzWqjS3qTFwc0DvUTdkjBYpqHvn9EIwlocmoEEe-LefMFE0tPqXSFspONgQzjTp1Txe68FKR93mpIao35yn_0RDFDTQ-tO0TWnUqRhOyTWr3Dk"/>
+<div class="absolute bottom-0 left-0 p-8 bg-gradient-to-t from-black/80 to-transparent w-full">
+<h3 class="font-headline text-3xl italic">EVENT HORIZON</h3>
+<p class="font-label text-xs uppercase text-primary tracking-widest mt-1">Quantum Visuals · 18:30</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Row: Nature & Seasonal -->
+<section class="pl-8 md:pl-16">
+<div class="flex justify-between items-end pr-8 md:pr-16 mb-8">
+<h2 class="font-headline italic text-4xl text-on-surface">Nature &amp; Seasonal</h2>
+</div>
+<div class="flex gap-6 overflow-x-auto hide-scrollbar">
+<div class="min-w-[280px] bg-surface-container-low p-2 group cursor-pointer">
+<div class="aspect-square overflow-hidden">
+<img alt="Nature artwork" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" data-alt="Rolling green hills in soft morning light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbbymPIGZW8uqBw4OnF5IawohKcqybAfUOfi2bbor7VNgCPCqF3CVWWLjIKOkqsWsSOvh_94AzKQ_M-QlPkicFDCAwXy3YtUzKrTYq06SCIlqbi8Z2-320JHbXU_AHpmxGxAFEkBAyNchti-LwE-gVq8Q0m-cfFMCSGzycO7TRhijKP3Synhna1A6ei2iK8zQfPR8UAvnJc4kcmZh83jRZVfHelj1AB3ax6sFh3-GJIt16-gqg815whUW3T4E3ABG126Q4JhU_9BQ"/>
+</div>
+<div class="mt-4 px-2 pb-2">
+<h3 class="font-body text-sm font-extrabold uppercase tracking-widest">VERDANT 01</h3>
+<div class="flex items-center gap-2 mt-2">
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+<span class="text-[10px] text-outline uppercase">Spring Collection</span>
+</div>
+</div>
+</div>
+<!-- Repeated Nature -->
+<div class="min-w-[280px] bg-surface-container-low p-2 group cursor-pointer">
+<div class="aspect-square overflow-hidden">
+<img alt="Nature artwork" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" data-alt="Crystal clear blue lake at foot of mountains" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTirTo9C0fAUjLoT0OhZhHniTCuCXsANH8vm7UxUfR4SHAwawH9Aw4df3JYDmvlWgqlhp90L_840790y8Oqh6S0GTkTR4nvpf40YzO9oJEYPzWHwQoIXw6EpqVg2B_C2Ba1PwjpfvuasJqEnm2mfQKwld-0RJ4cjGVBieiBPE_4t3NR-uyZ1cp_m2vfJTGVONCmgHFv4DywaPc0V8pCJSXHFmVCW-TYIJBiU4ncHwKTKQkLcC_KT6jogIXIJBwk8nkhFIvCCu7QiI"/>
+</div>
+<div class="mt-4 px-2 pb-2">
+<h3 class="font-body text-sm font-extrabold uppercase tracking-widest">AQUA SOLITUDE</h3>
+<div class="flex items-center gap-2 mt-2">
+<span class="w-2 h-2 rounded-full bg-blue-500"></span>
+<span class="text-[10px] text-outline uppercase">Winter Echoes</span>
+</div>
+</div>
+</div>
+<div class="min-w-[280px] bg-surface-container-low p-2 group cursor-pointer">
+<div class="aspect-square overflow-hidden">
+<img alt="Nature artwork" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" data-alt="Cozy wooden house on shore of alpine lake" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQj76CmzXt-BYHvpSZ66veXHM1oh69JvDWeA47jHjtJJN_FO4rdYHoBchEEO6ZsLz-Zef2PxE_j9LdqEt9Ykii9VfWAZdP9lCbW38Ndu3Anp2k0ZDPgKQcgIx1JwhQrB26EWBaeFlwdWBr9x_zROzP-SbahEpee-NRVcELPHiDafBv02-n_g14KEZduZ7ujwIlhpWgGBEC4zxbVEBKdiH5epqsVwjv5drNTdKsNd1W9O0NZv_WPQwsbm1dp8rT-FC0ygRl4oEYGkA"/>
+</div>
+<div class="mt-4 px-2 pb-2">
+<h3 class="font-body text-sm font-extrabold uppercase tracking-widest">DUSK CABIN</h3>
+<div class="flex items-center gap-2 mt-2">
+<span class="w-2 h-2 rounded-full bg-orange-500"></span>
+<span class="text-[10px] text-outline uppercase">Autumn Peak</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer Component -->
+<footer class="w-full px-8 py-12 flex flex-col md:flex-row justify-between items-center gap-6 bg-[#0e0e0e] border-t border-[#4e4636]/20">
+<div class="text-lg font-headline text-[#D4A843]">LUMOS MEDIA ART</div>
+<div class="flex gap-8 font-manrope text-[10px] uppercase tracking-[0.1em]">
+<a class="text-[#9a8f7d] hover:text-[#f2c35b] transition-opacity" href="#">Terms</a>
+<a class="text-[#9a8f7d] hover:text-[#f2c35b] transition-opacity" href="#">Privacy</a>
+<a class="text-[#9a8f7d] hover:text-[#f2c35b] transition-opacity" href="#">Contact</a>
+<a class="text-[#9a8f7d] hover:text-[#f2c35b] transition-opacity" href="#">Socials</a>
+</div>
+<div class="font-manrope text-[10px] uppercase tracking-[0.1em] text-[#9a8f7d]">
+            © 2024 LUMOS MEDIA ART
+        </div>
+</footer>
+</body></html>

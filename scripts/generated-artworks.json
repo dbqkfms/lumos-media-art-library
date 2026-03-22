@@ -1,0 +1,146 @@
+[
+  {
+    "id": "gen-gravity-waves-1772691856698",
+    "title": "반중력 파동",
+    "description": "깊은 우주 속 빛의 입자들이 중력을 거스르며 황금빛 궤적을 그립니다. 어둠 속에서 피어나는 안티그래비티의 미학.",
+    "category": "Abstract",
+    "image": "/thumbnails/generated/gravity-waves-1772691856698.jpg",
+    "displayType": "Horizontal",
+    "runtime": "∞",
+    "resolution": "1280x720",
+    "tags": [
+      "abstract",
+      "gravity",
+      "light",
+      "space"
+    ],
+    "worldType": "standard",
+    "generatedAt": "2026-03-05T06:24:17.284Z"
+  },
+  {
+    "id": "gen-cosmic-crystal-1772691856698",
+    "title": "우주 결정체",
+    "description": "성운 속 떠다니는 크리스탈 구조물. 바이오루미네선스 유기체들이 무중력 상태에서 빛을 발합니다.",
+    "category": "Cosmic",
+    "image": "/thumbnails/generated/cosmic-crystal-1772691856698.jpg",
+    "displayType": "Horizontal",
+    "runtime": "∞",
+    "resolution": "1280x720",
+    "tags": [
+      "cosmic",
+      "crystal",
+      "nebula",
+      "luxury"
+    ],
+    "worldType": "standard",
+    "generatedAt": "2026-03-05T06:24:17.799Z"
+  },
+  {
+    "id": "gen-digital-sansu-1772691856698",
+    "title": "디지털 산수",
+    "description": "전통 산수화가 디지털 빛의 흐름으로 재해석됩니다. 먹의 번짐과 네온 궤적이 어우러진 현대적 동양화.",
+    "category": "Oriental",
+    "image": "/thumbnails/generated/digital-sansu-1772691856698.jpg",
+    "displayType": "Vertical",
+    "runtime": "∞",
+    "resolution": "720x1280",
+    "tags": [
+      "oriental",
+      "mountain",
+      "digital",
+      "ink"
+    ],
+    "worldType": "standard",
+    "generatedAt": "2026-03-05T06:24:17.970Z"
+  },
+  {
+    "id": "gen-wave-resonance-1772691856698",
+    "title": "파동 공명",
+    "description": "소리의 파동이 빛의 동심원으로 시각화됩니다. 골드와 화이트 빛이 어둠 위에 기하학적 패턴을 그립니다.",
+    "category": "Abstract",
+    "image": "/thumbnails/generated/wave-resonance-1772691856698.jpg",
+    "displayType": "Horizontal",
+    "runtime": "∞",
+    "resolution": "1280x720",
+    "tags": [
+      "wave",
+      "sound",
+      "minimal",
+      "geometric"
+    ],
+    "worldType": "standard",
+    "generatedAt": "2026-03-05T06:24:19.407Z"
+  },
+  {
+    "id": "gen-fractal-light-1772691856698",
+    "title": "생명의 프랙탈",
+    "description": "자연에서 영감받은 유기적 프랙탈 패턴. 빛 입자로 이루어진 나뭇가지가 어둠 속에서 성장합니다.",
+    "category": "Nature",
+    "image": "/thumbnails/generated/fractal-light-1772691856698.jpg",
+    "displayType": "Vertical",
+    "runtime": "∞",
+    "resolution": "720x1280",
+    "tags": [
+      "fractal",
+      "nature",
+      "organic",
+      "light"
+    ],
+    "worldType": "standard",
+    "generatedAt": "2026-03-05T06:24:22.437Z"
+  },
+  {
+    "id": "gen-hanok-light-1772691856698",
+    "title": "한옥의 빛",
+    "description": "한옥 창호를 통해 스며드는 부드러운 빛. 전통 건축의 아름다움이 디지털 아트로 재탄생합니다.",
+    "category": "Traditional",
+    "image": "/thumbnails/generated/hanok-light-1772691856698.jpg",
+    "displayType": "Horizontal",
+    "runtime": "∞",
+    "resolution": "1280x720",
+    "tags": [
+      "hanok",
+      "traditional",
+      "warm",
+      "Korean"
+    ],
+    "worldType": "local",
+    "generatedAt": "2026-03-05T06:24:22.695Z"
+  },
+  {
+    "id": "gen-moonlit-garden-1772691856698",
+    "title": "달빛 정원",
+    "description": "달빛 아래 한국 전통 정원. 대나무와 소나무가 은은한 빛에 감싸여 고요한 밤 풍경을 연출합니다.",
+    "category": "Nature",
+    "image": "/thumbnails/generated/moonlit-garden-1772691856698.jpg",
+    "displayType": "Horizontal",
+    "runtime": "∞",
+    "resolution": "1280x720",
+    "tags": [
+      "garden",
+      "moon",
+      "bamboo",
+      "night"
+    ],
+    "worldType": "local",
+    "generatedAt": "2026-03-05T06:24:22.941Z"
+  },
+  {
+    "id": "gen-flowing-ink-1772691856698",
+    "title": "흐르는 먹",
+    "description": "한지 위에 먹물이 흐르는 순간을 포착한 디지털 수묵화. 번짐과 농담의 미학이 현대적으로 재해석됩니다.",
+    "category": "Oriental",
+    "image": "/thumbnails/generated/flowing-ink-1772691856698.jpg",
+    "displayType": "Vertical",
+    "runtime": "∞",
+    "resolution": "720x1280",
+    "tags": [
+      "ink",
+      "calligraphy",
+      "zen",
+      "Korean"
+    ],
+    "worldType": "local",
+    "generatedAt": "2026-03-05T06:24:24.419Z"
+  }
+]

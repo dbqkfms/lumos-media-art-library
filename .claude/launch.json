@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "lumos-dev",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["dev"],
+      "port": 3000,
+      "cwd": "C:\\Users\\user\\Downloads\\Lumos\\Lumos 안티그래비티\\lumos-media-art-library"
+    }
+  ]
+}
