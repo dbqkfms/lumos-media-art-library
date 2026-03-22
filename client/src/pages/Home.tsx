@@ -265,6 +265,142 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ─── Why LUMOS Section ─── */}
+      <section className="relative py-32 md:py-40 px-6 md:px-16 bg-transparent border-t border-white/5">
+        <div className="max-w-[1200px] mx-auto">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={staggerContainer}
+            className="text-center mb-20"
+          >
+            <motion.div variants={fadeUp} className="flex items-center justify-center gap-4 mb-6">
+              <div className="w-12 h-[1px] bg-[#D4A843]/40" />
+              <p className="font-accent text-[9px] tracking-[0.6em] text-[#D4A843] uppercase">Why LUMOS</p>
+              <div className="w-12 h-[1px] bg-[#D4A843]/40" />
+            </motion.div>
+            <motion.h2 variants={fadeUp} className="font-display text-4xl md:text-6xl text-[#e0e0e0] font-light tracking-tight">
+              왜 LUMOS인가
+            </motion.h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { icon: "◈", title: "큐레이션 품질", titleEn: "Curated Quality", desc: "AI로 만들었다는 사실보다, 어떤 공간에 어떤 작품이 맞는지 아는 것이 LUMOS의 핵심입니다." },
+              { icon: "◇", title: "공간 최적화", titleEn: "Space-Optimized", desc: "호텔 로비부터 카페 카운터까지, 디스플레이 크기와 방향에 맞춘 콘텐츠를 제안합니다." },
+              { icon: "◆", title: "프리미엄 서포트", titleEn: "Premium Support", desc: "문의에서 설치까지, 리사이징과 커스텀 편집을 포함한 엔드투엔드 서비스를 제공합니다." },
+            ].map((item, i) => (
+              <motion.div
+                key={item.titleEn}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: i * 0.15 }}
+                className="group bg-[#0f0f0f] border border-white/5 p-10 hover:border-[#D4A843]/20 transition-all duration-500 relative overflow-hidden"
+              >
+                <div className="absolute -top-16 -right-16 w-48 h-48 bg-[#D4A843]/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <div className="relative z-10">
+                  <div className="text-[#D4A843] text-3xl mb-6 opacity-60 group-hover:opacity-100 transition-opacity">{item.icon}</div>
+                  <div className="font-accent text-[9px] tracking-[0.5em] uppercase text-[#909090] mb-2">{item.titleEn}</div>
+                  <h3 className="font-display text-2xl text-[#f5f5f5] mb-4">{item.title}</h3>
+                  <p className="text-[#909090] text-sm leading-relaxed break-keep">{item.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── For Spaces Section ─── */}
+      <section className="relative py-32 md:py-40 px-6 md:px-16 bg-transparent border-t border-white/5">
+        <div className="max-w-[1400px] mx-auto">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={staggerContainer}
+            className="mb-16"
+          >
+            <motion.div variants={fadeUp} className="flex items-center gap-4 mb-6">
+              <div className="w-12 h-[1px] bg-white/10" />
+              <p className="font-accent text-[9px] tracking-[0.6em] text-gray-500 uppercase">For Every Space</p>
+            </motion.div>
+            <motion.h2 variants={fadeUp} className="font-display text-4xl md:text-6xl text-[#e0e0e0] font-light tracking-tight mb-4">
+              어떤 공간이든
+            </motion.h2>
+            <motion.p variants={fadeUp} className="text-[#909090] text-base max-w-xl break-keep">
+              공간의 성격과 목적에 맞는 콘텐츠를 제안합니다. 어떤 공간이든 LUMOS가 빛으로 완성합니다.
+            </motion.p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {[
+              { icon: "🏨", title: "Hotel & Resort", sub: "호텔 & 리조트", desc: "로비, 라운지, 복도에 프리미엄 미디어아트를" },
+              { icon: "🖼", title: "Gallery & Museum", sub: "갤러리 & 뮤지엄", desc: "전시 공간에 어울리는 큐레이션 콘텐츠를" },
+              { icon: "☕", title: "F&B", sub: "카페 & 레스토랑", desc: "공간 분위기에 녹아드는 앰비언트 아트를" },
+              { icon: "🛍", title: "Retail", sub: "매장 & 쇼룸", desc: "파사드와 VMD에 동적 비주얼을" },
+              { icon: "🏢", title: "Office", sub: "로비 & 미팅룸", desc: "기업 아이덴티티를 시각적으로" },
+              { icon: "🏛", title: "Public", sub: "공공 & 전시", desc: "도시의 문화적 품격을 높이는 대형 미디어아트를" },
+            ].map((space, i) => (
+              <motion.div
+                key={space.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.1 }}
+                onClick={() => setLocation("/solutions")}
+                className="group bg-gradient-to-br from-[#0f0f0f] to-[#1a1a1a] border border-white/5 p-8 cursor-pointer hover:border-[#D4A843]/20 transition-all duration-500 relative overflow-hidden"
+              >
+                <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-[#D4A843]/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <div className="relative z-10">
+                  <div className="text-3xl mb-4 grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500">{space.icon}</div>
+                  <h3 className="font-display text-xl text-[#f5f5f5] mb-1 group-hover:text-[#D4A843] transition-colors duration-500">{space.title}</h3>
+                  <div className="font-accent text-[9px] tracking-[0.4em] uppercase text-[#909090] mb-3">{space.sub}</div>
+                  <p className="text-[#666] text-sm break-keep">{space.desc}</p>
+                  <div className="mt-4 font-accent text-[9px] tracking-[0.3em] uppercase text-[#D4A843] opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    Learn More →
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── CTA Banner ─── */}
+      <section className="relative py-24 md:py-32 px-6 md:px-16 bg-transparent border-t border-white/5">
+        <div className="max-w-3xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <h2 className="font-display text-3xl md:text-5xl text-[#e0e0e0] font-light mb-6">
+              공간의 품격을<br /><span className="text-[#D4A843] italic">빛으로 완성하세요</span>
+            </h2>
+            <p className="text-[#909090] text-sm md:text-base mb-10 break-keep">
+              맞춤형 콘텐츠 제안부터 설치까지, LUMOS가 함께합니다.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={() => setLocation("/explore")}
+                className="bg-[#D4A843] text-black font-accent text-[10px] tracking-[0.3em] uppercase px-10 py-4 hover:bg-[#F0C060] transition-colors"
+              >
+                Explore Collection
+              </button>
+              <button
+                onClick={() => setLocation("/contact")}
+                className="border border-white/15 text-[#e0e0e0] font-accent text-[10px] tracking-[0.3em] uppercase px-10 py-4 hover:border-[#D4A843]/40 hover:text-[#D4A843] transition-all"
+              >
+                Contact Us
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* ─── Footer ─── */}
       <footer className="py-24 px-10 md:px-20 bg-transparent border-t border-white/5 relative overflow-hidden">
         {/* Abstract Glow in Footer */}

@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx vite:*)",
+      "mcp__stitch__*",
+      "mcp__vertex__*"
+    ]
+  },
+  "mcpServers": {
+    "stitch": {
+      "command": "npx",
+      "args": ["@_davideast/stitch-mcp", "proxy"],
+      "env": {
+        "STITCH_API_KEY": "AQ.Ab8RN6J-0G9ft-py-xNn1ixMcLagGP6ye_l_Ua0g19Uj3GHHOg"
+      }
+    }
+  }
+}
