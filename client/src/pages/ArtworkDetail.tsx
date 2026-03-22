@@ -11,109 +11,202 @@
   - CTA button opens FloatingCTA with artwork name
 */
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useRoute } from "wouter";
-import { ArrowLeft, Share2, Play, Building2, X, Maximize2 } from "lucide-react";
+import { ArrowLeft, Share2, Play, Building2, X, Maximize2, Lock, Unlock } from "lucide-react";
 import Header from "@/components/Header";
 import FloatingCTA from "@/components/FloatingCTA";
-import { standardArtworks, type Artwork as StandardArtwork } from "@/data/standardArtworks";
-import { localArtworks, type Artwork as LocalArtwork } from "@/data/localArtworks";
+import { useMarketplace, Artwork } from "@/contexts/MarketplaceContext";
 import { toast } from "sonner";
 
-type Artwork = StandardArtwork | LocalArtwork;
 type PlayerTab = "video" | "simulation";
 
-// ─── Installation Simulation ───────────────────────────────────────────────
-function InstallationSimulation({ accentColor, title }: { accentColor: string; title: string }) {
-  const scenes = [
-    { label: "고급 호텔 로비", desc: "Grand Hotel Lobby" },
-    { label: "기업 본사 로비", desc: "Corporate HQ Atrium" },
-    { label: "건물 외벽 야경", desc: "Outdoor Facade — Night" },
-  ];
+// ─── Installation Simulation v3 ─────────────────────────────────────────────
+// 15개 환경 × 자동 매칭 엔진 + LED 스크린 임베딩
+import { ENVIRONMENTS, matchArtworkToEnvironments, renderEnvironmentBg, getScreenRect } from "@/components/SimulationEnvironments";
+
+function InstallationSimulation({ artwork, accentColor }: { artwork: Artwork; accentColor: string }) {
+  const [hoveredScene, setHoveredScene] = useState<number | null>(null);
+  const [expandedScene, setExpandedScene] = useState<number | null>(null);
+  const [showAll, setShowAll] = useState(false);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+
+  const isVertical = (artwork as any).displayType === "Vertical";
+  const videoSrc = (artwork as any).videoSrc as string | undefined;
+
+  // 작품-환경 자동 매칭
+  const matchResults = useMemo(() => matchArtworkToEnvironments(artwork), [artwork]);
+  const visibleResults = showAll ? matchResults : matchResults.slice(0, 6);
+
+  const { scr, floorY } = getScreenRect("", isVertical);
+
+  const handleMouseEnter = (idx: number) => {
+    setHoveredScene(idx);
+    if (videoSrc) videoRefs.current[idx]?.play().catch(() => { });
+  };
+  const handleMouseLeave = (idx: number) => {
+    setHoveredScene(null);
+    const v = videoRefs.current[idx];
+    if (v) { v.pause(); v.currentTime = 0; }
+  };
+
+  // 장면 SVG 렌더 함수
+  const renderScene = (envId: string, idx: number, large = false) => {
+    const isHovered = hoveredScene === idx || large;
+    const uid = `${envId}${idx}${large ? "L" : ""}`;
+    const reflectIntensity = isHovered ? 0.7 : 0.35;
+
+    return (
+      <svg viewBox="0 0 800 450" className="w-full h-full" preserveAspectRatio="xMidYMid meet">
+        {/* 환경 배경 */}
+        {renderEnvironmentBg(envId, accentColor, floorY, scr, isHovered, uid)}
+
+        {/* 벽면 ambient 글로우 */}
+        <rect x="0" y="0" width="800" height="450" fill={`url(#g${uid})`} className="sim-glow-pulse" />
+
+        {/* LED 스크린 프레임 */}
+        <rect x={scr.x - 4} y={scr.y - 4} width={scr.w + 8} height={scr.h + 8} fill="#030303" stroke={accentColor} strokeWidth="1.5" strokeOpacity={isHovered ? 0.7 : 0.35} style={{ transition: "stroke-opacity 0.5s" }} />
+        <rect x={scr.fx} y={scr.fy} width={scr.fw} height={scr.fh} fill="#080808" />
+
+        {/* 실제 작품 콘텐츠 */}
+        <foreignObject x={scr.fx} y={scr.fy} width={scr.fw} height={scr.fh}>
+          <div style={{ width: "100%", height: "100%", overflow: "hidden", background: "#080808" }}>
+            {(videoSrc && (isHovered || large)) ? (
+              <video
+                ref={el => { videoRefs.current[idx] = el; }}
+                src={videoSrc}
+                muted loop playsInline
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              />
+            ) : (
+              <img src={artwork.image} alt={artwork.title}
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+            )}
+          </div>
+        </foreignObject>
+
+        {/* LED 스캔라인 */}
+        {Array.from({ length: Math.floor(scr.fh / 4) }, (_, i) => (
+          <line key={`sl${i}`} x1={scr.fx} y1={scr.fy + i * 4} x2={scr.fx + scr.fw} y2={scr.fy + i * 4} stroke="black" strokeWidth="0.5" opacity="0.08" />
+        ))}
+
+        {/* 바닥 빛 반사 */}
+        <rect x={scr.x - 60} y={floorY} width={scr.w + 120} height="70" fill={`url(#r${uid})`} style={{ transition: "opacity 0.5s" }} />
+
+        {/* 인물 실루엣 */}
+        <g opacity={isHovered ? 0.9 : 0.7} style={{ transition: "opacity 0.5s" }}>
+          <ellipse cx={isVertical ? 180 : 120} cy={floorY + 4} rx="16" ry="5" fill="#111" />
+          <rect x={isVertical ? 172 : 112} y={floorY - 55} width="16" height="55" rx="8" fill="#151515" />
+          <circle cx={isVertical ? 180 : 120} cy={floorY - 68} r="12" fill="#151515" />
+          <circle cx={isVertical ? 180 : 120} cy={floorY - 68} r="13" fill="none" stroke={accentColor} strokeWidth="0.5" opacity={isHovered ? 0.3 : 0} style={{ transition: "opacity 0.5s" }} />
+        </g>
+        <g opacity={isHovered ? 0.9 : 0.7} style={{ transition: "opacity 0.5s" }}>
+          <ellipse cx={isVertical ? 620 : 680} cy={floorY + 4} rx="16" ry="5" fill="#111" />
+          <rect x={isVertical ? 612 : 672} y={floorY - 60} width="16" height="60" rx="8" fill="#151515" />
+          <circle cx={isVertical ? 620 : 680} cy={floorY - 73} r="12" fill="#151515" />
+          <circle cx={isVertical ? 620 : 680} cy={floorY - 73} r="13" fill="none" stroke={accentColor} strokeWidth="0.5" opacity={isHovered ? 0.3 : 0} style={{ transition: "opacity 0.5s" }} />
+        </g>
+
+        {/* LUMOS 워터마크 */}
+        <text x={scr.fx + scr.fw - 8} y={scr.fy + scr.fh - 8} textAnchor="end" fill="white" fontSize="7" fontFamily="monospace" opacity="0.15">LUMOS</text>
+      </svg>
+    );
+  };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      {scenes.map((scene, idx) => (
-        <div key={idx} className="relative overflow-hidden bg-[#0a0a0a] border border-white/5">
-          {/* SVG Room Mockup */}
-          <div className="aspect-video relative">
-            <svg viewBox="0 0 800 450" className="w-full h-full">
-              <defs>
-                <linearGradient id={`floor${idx}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#1a1a1a" />
-                  <stop offset="100%" stopColor="#0a0a0a" />
-                </linearGradient>
-                <radialGradient id={`glow${idx}`} cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor={accentColor} stopOpacity="0.25" />
-                  <stop offset="100%" stopColor={accentColor} stopOpacity="0" />
-                </radialGradient>
-              </defs>
+    <>
+      <style>{`
+        .sim-glow-pulse { animation: simGlowPulse 4s ease-in-out infinite; }
+        @keyframes simGlowPulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
+        .sim-star { animation: simStarTwinkle 3s ease-in-out infinite; }
+        @keyframes simStarTwinkle { 0%,100%{opacity:var(--star-base,0.3)} 50%{opacity:0.8} }
+        .sim-chandelier { animation: simFlicker 3s ease-in-out infinite; }
+        @keyframes simFlicker { 0%,100%{opacity:0.15} 30%{opacity:0.35} 60%{opacity:0.1} 80%{opacity:0.25} }
+        .sim-card { transition: all 0.4s cubic-bezier(0.4,0,0.2,1); }
+        .sim-card:hover { transform: scale(1.02); }
+      `}</style>
 
-              {/* Background */}
-              <rect width="800" height="450" fill="#0d0d0d" />
-
-              {/* Scene-specific elements */}
-              {idx === 0 && (
-                <>
-                  {/* Hotel lobby: columns */}
-                  <rect x="60" y="80" width="20" height="280" fill="#1a1a1a" />
-                  <rect x="720" y="80" width="20" height="280" fill="#1a1a1a" />
-                  <rect x="0" y="360" width="800" height="90" fill="url(#floor0)" />
-                  <rect x="0" y="355" width="800" height="5" fill={accentColor} opacity="0.15" />
-                  {/* Chandelier */}
-                  <circle cx="400" cy="40" r="30" fill="#111" stroke={accentColor} strokeWidth="1" strokeOpacity="0.3" />
-                  <line x1="400" y1="70" x2="400" y2="100" stroke={accentColor} strokeWidth="1" strokeOpacity="0.3" />
-                </>
-              )}
-              {idx === 1 && (
-                <>
-                  {/* Corporate: clean lines */}
-                  <rect x="0" y="380" width="800" height="70" fill="url(#floor1)" />
-                  <rect x="0" y="375" width="800" height="5" fill={accentColor} opacity="0.1" />
-                  {/* Logo placeholder */}
-                  <text x="400" y="50" textAnchor="middle" fill={accentColor} fontSize="14" fontFamily="monospace" opacity="0.4">CORP</text>
-                </>
-              )}
-              {idx === 2 && (
-                <>
-                  {/* Night exterior: stars */}
-                  {[...Array(20)].map((_, i) => (
-                    <circle key={i} cx={Math.random() * 800} cy={Math.random() * 200} r="1" fill="white" opacity={0.3 + Math.random() * 0.4} />
-                  ))}
-                  <rect x="0" y="380" width="800" height="70" fill="#050505" />
-                  {/* Ground line */}
-                  <rect x="0" y="378" width="800" height="2" fill={accentColor} opacity="0.2" />
-                </>
-              )}
-
-              {/* LED Screen */}
-              <rect x="150" y="100" width="500" height="240" rx="3" fill="#050505" stroke={accentColor} strokeWidth="1.5" strokeOpacity="0.5" />
-              <rect x="156" y="106" width="488" height="228" fill="#080808" />
-              <rect x="156" y="106" width="488" height="228" fill={`url(#glow${idx})`} />
-
-              {/* Screen content */}
-              <text x="400" y="215" textAnchor="middle" fill={accentColor} fontSize="16" fontFamily="serif" opacity="0.6">{title}</text>
-              <text x="400" y="238" textAnchor="middle" fill="white" fontSize="9" fontFamily="monospace" opacity="0.3">LUMOS MEDIA ART</text>
-
-              {/* Human silhouettes */}
-              <ellipse cx="110" cy="368" rx="18" ry="6" fill="#1a1a1a" />
-              <rect x="100" y="305" width="20" height="63" rx="10" fill="#1a1a1a" />
-              <circle cx="110" cy="292" r="14" fill="#1a1a1a" />
-
-              <ellipse cx="690" cy="368" rx="18" ry="6" fill="#1a1a1a" />
-              <rect x="680" y="305" width="20" height="63" rx="10" fill="#1a1a1a" />
-              <circle cx="690" cy="292" r="14" fill="#1a1a1a" />
-            </svg>
-          </div>
-
-          {/* Scene Label */}
-          <div className="px-4 py-3 border-t border-white/5">
-            <p className="font-accent text-[10px] tracking-widest text-gray-500">{scene.desc}</p>
-            <p className="text-sm text-gray-300 mt-0.5">{scene.label}</p>
-          </div>
+      {/* 매칭 결과 헤더 */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <p className="font-accent text-[10px] tracking-widest text-gray-500 mb-1">AI 공간 매칭</p>
+          <p className="text-sm text-gray-400">
+            이 작품에 가장 어울리는 <span style={{ color: accentColor }}>{matchResults.filter(m => m.score > 20).length}개</span> 공간을 추천합니다
+          </p>
         </div>
-      ))}
-    </div>
+        <button
+          onClick={() => setShowAll(!showAll)}
+          className="font-accent text-[10px] tracking-widest px-4 py-2 border border-white/10 text-gray-500 hover:text-white hover:border-white/20 transition-all"
+        >
+          {showAll ? `추천 공간만 보기` : `전체 ${ENVIRONMENTS.length}개 보기`}
+        </button>
+      </div>
+
+      {/* 확대 뷰 */}
+      {expandedScene !== null && (
+        <div className="mb-8 relative">
+          <div className="relative bg-[#080808] border border-white/10 overflow-hidden" style={{ aspectRatio: "16/9", maxHeight: "60vh" }}>
+            {renderScene(visibleResults[expandedScene].env.id, expandedScene, true)}
+            <div className="absolute bottom-0 left-0 right-0 px-6 py-4 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-white font-semibold">{artwork.title}</p>
+                  <p className="font-accent text-[10px] tracking-widest text-gray-500 mt-0.5">{visibleResults[expandedScene].env.label}</p>
+                </div>
+                <div className="flex items-center gap-4">
+                  <span className="font-accent text-[9px] tracking-wider text-gray-500">{artwork.resolution}</span>
+                  <span className="font-accent text-[9px] tracking-wider text-gray-500">{isVertical ? "세로형" : "가로형"}</span>
+                  <span className="font-accent text-[9px] tracking-wider px-2 py-0.5 border" style={{ color: accentColor, borderColor: `${accentColor}40` }}>
+                    매칭 {visibleResults[expandedScene].score}점
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            onClick={() => setExpandedScene(null)}
+            className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-black/60 border border-white/10 text-gray-400 hover:text-white hover:bg-black/80 transition-all"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
+
+      {/* 환경 그리드 */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {visibleResults.map((result, idx) => (
+          <div
+            key={result.env.id}
+            className="sim-card relative overflow-hidden bg-transparent border cursor-pointer"
+            style={{
+              borderColor: hoveredScene === idx ? `${accentColor}40` : "rgba(255,255,255,0.05)",
+              boxShadow: hoveredScene === idx ? `0 0 30px ${accentColor}20, 0 0 60px ${accentColor}08` : "none",
+              transition: "border-color 0.4s, box-shadow 0.4s",
+            }}
+            onMouseEnter={() => handleMouseEnter(idx)}
+            onMouseLeave={() => handleMouseLeave(idx)}
+            onClick={() => setExpandedScene(expandedScene === idx ? null : idx)}
+          >
+            <div className="aspect-video relative">
+              {renderScene(result.env.id, idx)}
+            </div>
+            <div className="px-4 py-3 border-t flex items-center justify-between" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
+              <div>
+                <p className="font-accent text-[10px] tracking-widest" style={{ color: hoveredScene === idx ? accentColor : "#6b7280", transition: "color 0.3s" }}>
+                  {result.env.desc}
+                </p>
+                <p className="text-sm text-gray-300 mt-0.5">{result.env.label}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="font-accent text-[9px] tracking-wider px-2 py-0.5 border" style={{ color: accentColor, borderColor: `${accentColor}30`, opacity: 0.7 }}>
+                  {result.score}점
+                </span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
 
@@ -121,6 +214,7 @@ function InstallationSimulation({ accentColor, title }: { accentColor: string; t
 export default function ArtworkDetail() {
   const [, params] = useRoute("/artwork/:id");
   const [, setLocation] = useLocation();
+  const { artworks, ownedLicenses, acquireArtwork } = useMarketplace();
   const [artwork, setArtwork] = useState<Artwork | null>(null);
   const [relatedArtworks, setRelatedArtworks] = useState<Artwork[]>([]);
   const [descExpanded, setDescExpanded] = useState(false);
@@ -129,11 +223,10 @@ export default function ArtworkDetail() {
 
   useEffect(() => {
     if (!params?.id) return;
-    const allArtworks = [...standardArtworks, ...localArtworks];
-    const found = allArtworks.find((art) => art.id === params.id);
+    const found = artworks.find((art) => art.id === params.id);
     if (found) {
       setArtwork(found);
-      const related = allArtworks
+      const related = artworks
         .filter((art) => art.category === found.category && art.id !== found.id)
         .slice(0, 4);
       setRelatedArtworks(related);
@@ -141,7 +234,7 @@ export default function ArtworkDetail() {
     setActiveTab("video");
     setDescExpanded(false);
     setShowroomMode(false);
-  }, [params?.id]);
+  }, [params?.id, artworks]);
 
   // ESC key to exit showroom
   useEffect(() => {
@@ -154,7 +247,7 @@ export default function ArtworkDetail() {
 
   if (!artwork) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+      <div className="min-h-screen bg-transparent flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-display text-3xl text-white mb-6">작품을 찾을 수 없습니다</h2>
           <button onClick={() => setLocation("/")} className="btn-brutalist">
@@ -170,7 +263,6 @@ export default function ArtworkDetail() {
   const accentClass = isStandard ? "text-[#D4A843]" : "text-[#93C5FD]";
   const borderAccent = isStandard ? "border-[#D4A843]/20" : "border-[#93C5FD]/20";
   const btnClass = isStandard ? "btn-brutalist" : "btn-brutalist-blue";
-  const watermarkLabel = isStandard ? "LUMOS STANDARD" : "LUMOS LOCAL";
   const videoSrc = (artwork as any).videoSrc as string | undefined;
 
   const handleShare = () => {
@@ -215,18 +307,6 @@ export default function ArtworkDetail() {
               className="max-w-full max-h-full object-contain"
             />
           )}
-          {/* Watermark */}
-          <div
-            className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
-            style={{ opacity: 0.15 }}
-          >
-            <span
-              className="font-display text-white text-[5vw] tracking-[0.4em] uppercase"
-              style={{ userSelect: "none" }}
-            >
-              {watermarkLabel}
-            </span>
-          </div>
         </div>
       </div>
     );
@@ -234,8 +314,8 @@ export default function ArtworkDetail() {
 
   // ─── Normal View ───────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
-      <Header currentWorld={isStandard ? "standard" : "local"} />
+    <div className="min-h-screen bg-transparent">
+      <Header />
       <FloatingCTA />
 
       {/* ─── Hero: Full-Height Media ─── */}
@@ -245,7 +325,7 @@ export default function ArtworkDetail() {
           {videoSrc ? (
             <video
               src={videoSrc}
-              className="w-full h-full object-contain bg-[#050505]"
+              className="w-full h-full object-contain bg-[#030303]"
               autoPlay
               muted
               loop
@@ -255,25 +335,12 @@ export default function ArtworkDetail() {
             <img
               src={artwork.image}
               alt={artwork.title}
-              className="w-full h-full object-contain bg-[#050505] animate-slow-zoom"
+              className="w-full h-full object-contain bg-transparent animate-slow-zoom"
             />
           )}
 
           {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/85 pointer-events-none" />
-
-          {/* Watermark */}
-          <div
-            className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
-            style={{ opacity: 0.15 }}
-          >
-            <span
-              className="font-display text-white text-[3vw] tracking-[0.4em] uppercase"
-              style={{ userSelect: "none" }}
-            >
-              {watermarkLabel}
-            </span>
-          </div>
 
           {/* Back Button */}
           <button
@@ -303,7 +370,7 @@ export default function ArtworkDetail() {
                     {artwork.category}
                   </span>
                   <h1
-                    className="text-display text-[3rem] md:text-[4.5rem] leading-none text-white mb-6"
+                    className="text-display font-light text-[3rem] md:text-[3.5rem] leading-none text-[#e0e0e0] mb-6 tracking-tight blur-[0.2px]"
                     style={{ textShadow: "0 2px 30px rgba(0,0,0,0.9)" }}
                   >
                     {artwork.title}
@@ -327,12 +394,33 @@ export default function ArtworkDetail() {
 
                   {/* Action Buttons */}
                   <div className="flex flex-wrap gap-3">
-                    <button onClick={handleContactClick} className={btnClass}>
+                    {ownedLicenses.find(o => o.id === artwork.id) ? (
+                      <button
+                        onClick={() => setLocation("/vault")}
+                        className="flex items-center gap-2 px-8 py-3 bg-white hover:bg-gray-200 text-black font-bold tracking-widest text-sm transition-colors rounded"
+                      >
+                        <Unlock className="w-4 h-4" />
+                        GO TO VAULT
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          acquireArtwork(artwork);
+                          toast.success("License acquired! Saved to your vault.");
+                          setLocation("/vault");
+                        }}
+                        className={`flex items-center gap-2 px-8 py-3 font-bold tracking-widest text-sm transition-colors rounded ${isStandard ? 'bg-[#D4A843] hover:bg-[#F0C060] text-black' : 'bg-[#93C5FD] hover:bg-[#BFDBFE] text-black'}`}
+                      >
+                        <Lock className="w-4 h-4" />
+                        ACQUIRE LICENSE (0.5 ETH)
+                      </button>
+                    )}
+                    <button onClick={handleContactClick} className="flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/10 text-gray-300 font-accent text-xs tracking-widest hover:bg-white/10 hover:text-white transition-all duration-200 rounded">
                       이 작품으로 문의하기
                     </button>
                     <button
                       onClick={handleShare}
-                      className="flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/10 text-gray-300 font-accent text-xs tracking-widest hover:bg-white/10 hover:text-white transition-all duration-200"
+                      className="flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/10 text-gray-300 font-accent text-xs tracking-widest hover:bg-white/10 hover:text-white transition-all duration-200 rounded"
                     >
                       <Share2 className="w-3.5 h-3.5" />
                       공유
@@ -384,11 +472,10 @@ export default function ArtworkDetail() {
           <div className="flex gap-0 mb-10 border-b border-white/10">
             <button
               onClick={() => setActiveTab("video")}
-              className={`flex items-center gap-2 px-8 py-4 font-accent text-xs tracking-widest transition-all duration-200 border-b-2 -mb-px ${
-                activeTab === "video"
-                  ? `${accentClass} border-current`
-                  : "text-gray-600 border-transparent hover:text-gray-400"
-              }`}
+              className={`flex items-center gap-2 px-8 py-4 font-accent text-xs tracking-widest transition-all duration-200 border-b-2 -mb-px ${activeTab === "video"
+                ? `${accentClass} border-current`
+                : "text-gray-600 border-transparent hover:text-gray-400"
+                }`}
             >
               <Play className="w-3.5 h-3.5" />
               영상 보기
@@ -396,11 +483,10 @@ export default function ArtworkDetail() {
             <div className="w-px h-8 self-center bg-white/10" />
             <button
               onClick={() => setActiveTab("simulation")}
-              className={`flex items-center gap-2 px-8 py-4 font-accent text-xs tracking-widest transition-all duration-200 border-b-2 -mb-px ${
-                activeTab === "simulation"
-                  ? `${accentClass} border-current`
-                  : "text-gray-600 border-transparent hover:text-gray-400"
-              }`}
+              className={`flex items-center gap-2 px-8 py-4 font-accent text-xs tracking-widest transition-all duration-200 border-b-2 -mb-px ${activeTab === "simulation"
+                ? `${accentClass} border-current`
+                : "text-gray-600 border-transparent hover:text-gray-400"
+                }`}
             >
               <Building2 className="w-3.5 h-3.5" />
               설치 시뮬레이션
@@ -409,7 +495,7 @@ export default function ArtworkDetail() {
 
           {/* Tab Content */}
           {activeTab === "video" ? (
-            <div className="relative w-full bg-[#050505] flex items-center justify-center" style={{ minHeight: "60vh" }}>
+            <div className="relative w-full bg-[#030303] flex items-center justify-center" style={{ minHeight: "60vh" }}>
               {videoSrc ? (
                 <video
                   src={videoSrc}
@@ -418,7 +504,6 @@ export default function ArtworkDetail() {
                   muted
                   loop
                   playsInline
-                  controls
                 />
               ) : (
                 <img
@@ -427,29 +512,17 @@ export default function ArtworkDetail() {
                   className="w-full max-h-[70vh] object-contain"
                 />
               )}
-              {/* Watermark */}
-              <div
-                className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
-                style={{ opacity: 0.15 }}
-              >
-                <span
-                  className="font-display text-white text-[2.5vw] tracking-[0.4em] uppercase"
-                  style={{ userSelect: "none" }}
-                >
-                  {watermarkLabel}
-                </span>
-              </div>
             </div>
           ) : (
-            <InstallationSimulation accentColor={accentColor} title={artwork.title} />
+            <InstallationSimulation artwork={artwork} accentColor={accentColor} />
           )}
         </div>
       </section>
 
       {/* ─── Related Artworks ─── */}
       {relatedArtworks.length > 0 && (
-        <section className="py-20 px-8 md:px-16 bg-[#0a0a0a] border-t border-white/5">
-          <div className="max-w-screen-xl mx-auto">
+        <section className="py-20 px-4 md:px-8 bg-[#030303] border-t border-white/5">
+          <div className="w-full">
             <div className="flex items-center gap-4 mb-10">
               <div className="h-px flex-1 bg-white/5" />
               <h2 className="font-accent text-xs tracking-[0.3em] text-gray-500 uppercase">
@@ -458,7 +531,7 @@ export default function ArtworkDetail() {
               <div className="h-px flex-1 bg-white/5" />
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-1">
               {relatedArtworks.map((rel) => {
                 const relVideo = (rel as any).videoSrc as string | undefined;
                 return (
@@ -466,26 +539,47 @@ export default function ArtworkDetail() {
                     key={rel.id}
                     className="group cursor-pointer"
                     onClick={() => setLocation(`/artwork/${rel.id}`)}
+                    onMouseEnter={(event) => {
+                      const video = event.currentTarget.querySelector("video");
+                      if (video instanceof HTMLVideoElement) {
+                        video.play().catch(() => {});
+                      }
+                    }}
+                    onMouseLeave={(event) => {
+                      const video = event.currentTarget.querySelector("video");
+                      if (video instanceof HTMLVideoElement) {
+                        video.pause();
+                        video.currentTime = 0;
+                      }
+                    }}
                   >
                     <div className="relative overflow-hidden aspect-video bg-[#111] mb-3">
+                      <img
+                        src={rel.image}
+                        alt={rel.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        loading="lazy"
+                      />
                       {relVideo ? (
                         <video
                           src={relVideo}
-                          autoPlay
                           loop
                           muted
                           playsInline
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         />
-                      ) : (
-                        <img
-                          src={rel.image}
-                          alt={rel.title}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                          loading="lazy"
-                        />
-                      )}
+                      ) : null}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      {relVideo ? (
+                        <div className="absolute bottom-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <div
+                            className="font-accent text-[9px] tracking-[0.24em] bg-black/50 backdrop-blur-sm px-2.5 py-1 border"
+                            style={{ color: accentColor, borderColor: `${accentColor}30` }}
+                          >
+                            HOVER PREVIEW
+                          </div>
+                        </div>
+                      ) : null}
                     </div>
                     <h3 className={`text-sm font-semibold text-white leading-tight line-clamp-1 group-hover:${accentClass} transition-colors duration-200`}>
                       {rel.title}

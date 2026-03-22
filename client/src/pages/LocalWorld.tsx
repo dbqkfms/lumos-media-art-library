@@ -1,27 +1,14 @@
-/*
-  LocalWorld v3 — Dark Gallery with Blue Accent
-  - Dark base (#0a0a0a) — unified with STANDARD
-  - Blue/Silver accent (#93C5FD)
-  - 4-column grid (desktop), 2-column (mobile)
-  - Search bar + skeleton loading + empty state
-  - Hover: scale(1.02) + blue glow border
-  - Contact Us → opens FloatingCTA
-*/
-
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { Search, X, Layers } from "lucide-react";
 import Header from "@/components/Header";
 import FloatingCTA from "@/components/FloatingCTA";
-import { localArtworks, localCategories } from "@/data/localArtworks";
+import { useMarketplace, Artwork } from "@/contexts/MarketplaceContext";
+import { deriveCategories } from "@/lib/artworkData";
 
-// 갤러리 카드 영상 모드 설정
-// "hover"  : 기본 썸네일, 마우스 오버 시 영상 재생
-// "autoplay": 모든 카드 자동 재생
 const CARD_VIDEO_MODE: "hover" | "autoplay" = "hover";
 
-// 영상 카드 컴포넌트
-function ArtworkCard({ artwork, onClick }: { artwork: typeof localArtworks[0]; onClick: () => void }) {
+function ArtworkCard({ artwork, onClick }: { artwork: Artwork; onClick: () => void }) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const handleMouseEnter = () => {
@@ -45,14 +32,12 @@ function ArtworkCard({ artwork, onClick }: { artwork: typeof localArtworks[0]; o
       onMouseLeave={handleMouseLeave}
     >
       <div className="relative overflow-hidden aspect-video bg-[#111]">
-        {/* 기본: 썸네일 이미지 */}
         <img
           src={artwork.image}
           alt={artwork.title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           loading="lazy"
         />
-        {/* 영상 오버레이 */}
         {artwork.videoSrc && (
           <video
             ref={videoRef}
@@ -68,8 +53,11 @@ function ArtworkCard({ artwork, onClick }: { artwork: typeof localArtworks[0]; o
             }
           />
         )}
-        <div className="card-hover-overlay card-hover-overlay-local">
-          <span className="card-hover-label">▶ 미리보기</span>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="absolute bottom-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="font-accent text-[9px] tracking-[0.24em] text-[#93C5FD] bg-black/50 backdrop-blur-sm px-2.5 py-1 border border-[#93C5FD]/20">
+            HOVER PREVIEW
+          </div>
         </div>
       </div>
       <div className="px-3.5 py-3">
@@ -84,14 +72,13 @@ function ArtworkCard({ artwork, onClick }: { artwork: typeof localArtworks[0]; o
   );
 }
 
-// Skeleton Card Component
 function SkeletonCard() {
   return (
-    <div className="bg-[#111] animate-pulse">
-      <div className="aspect-video bg-[#1a1a1a]" />
+    <div className="bg-[#0a0a0a] animate-pulse">
+      <div className="aspect-video bg-[#111]" />
       <div className="px-3.5 py-3 space-y-2">
-        <div className="h-3.5 bg-[#1a1a1a] rounded w-3/4" />
-        <div className="h-3 bg-[#1a1a1a] rounded w-1/3" />
+        <div className="h-3.5 bg-[#111] rounded w-3/4" />
+        <div className="h-3 bg-[#111] rounded w-1/3" />
       </div>
     </div>
   );
@@ -99,11 +86,21 @@ function SkeletonCard() {
 
 export default function LocalWorld() {
   const [, setLocation] = useLocation();
+  const { artworks } = useMarketplace();
   const [activeFilter, setActiveFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
-  // Simulate loading state
+  const localArtworks = useMemo(
+    () => artworks.filter((artwork) => artwork.worldType === "local"),
+    [artworks],
+  );
+
+  const localCategories = useMemo(
+    () => deriveCategories(artworks, "local"),
+    [artworks],
+  );
+
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 800);
     return () => clearTimeout(timer);
@@ -119,31 +116,24 @@ export default function LocalWorld() {
       result = result.filter(
         (art) =>
           art.title.toLowerCase().includes(q) ||
-          art.category.toLowerCase().includes(q)
+          art.category.toLowerCase().includes(q),
       );
     }
     return result;
-  }, [activeFilter, searchQuery]);
+  }, [activeFilter, localArtworks, searchQuery]);
 
   const handleContactClick = () => {
     window.dispatchEvent(new CustomEvent("open-contact"));
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
-      <Header currentWorld="local" />
+    <div className="min-h-screen bg-transparent">
+      <Header />
       <FloatingCTA />
 
-      {/* ─── Hero Section ─── */}
       <section className="relative h-[65vh] flex items-end justify-start overflow-hidden">
         <div className="absolute inset-0">
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="h-full w-full object-cover"
-          >
+          <video autoPlay loop muted playsInline className="h-full w-full object-cover">
             <source src="https://files.manuscdn.com/user_upload_by_module/session_file/91290999/wRyncDSflfQuQrwr.mp4" type="video/mp4" />
           </video>
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/90" />
@@ -151,23 +141,20 @@ export default function LocalWorld() {
         </div>
 
         <div className="relative z-10 px-12 md:px-20 pb-16 md:pb-20">
-          <p className="font-accent text-xs tracking-[0.3em] text-[#93C5FD] mb-5">
+          <p className="font-accent text-[10px] tracking-[0.6em] text-[#93C5FD] mb-5">
             KOREAN COMMERCIAL ART
           </p>
-          <h1 className="text-display text-[4rem] md:text-[6rem] leading-none text-white mb-5 text-shadow-strong">
+          <h1 className="text-display font-light text-[4rem] md:text-[5rem] leading-none text-[#e0e0e0] mb-5 text-shadow-strong tracking-tight">
             LOCAL
           </h1>
-          <p className="text-lg text-gray-300 max-w-xl text-shadow-medium">
-            한국의 전통미를 현대적으로 재해석한 상업용 미디어아트
+          <p className="text-lg text-[#aaaaaa] font-light max-w-xl text-shadow-medium tracking-wide">
+            Korean visual atmosphere for hospitality, retail, and everyday spaces.
           </p>
         </div>
       </section>
 
-      {/* ─── Gallery Section ─── */}
-      <section className="py-24 px-8 md:px-12">
-        <div className="max-w-screen-xl mx-auto">
-
-          {/* Search Bar */}
+      <section className="py-24 px-4 md:px-8">
+        <div className="w-full">
           <div className="relative mb-10 max-w-xl">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
             <input
@@ -187,40 +174,32 @@ export default function LocalWorld() {
             )}
           </div>
 
-          {/* Filter Pills */}
           <div className="flex flex-wrap gap-2.5 mb-12">
             {localCategories.map((category) => (
               <button
                 key={category}
                 onClick={() => setActiveFilter(category)}
-                className={`filter-pill ${
-                  activeFilter === category
-                    ? "filter-pill-active-local"
-                    : ""
-                }`}
+                className={`filter-pill ${activeFilter === category ? "filter-pill-active-local" : ""}`}
               >
                 {category}
               </button>
             ))}
           </div>
 
-          {/* Results count */}
           {(searchQuery || activeFilter !== "All") && !isLoading && (
             <p className="font-accent text-xs tracking-widest text-gray-600 mb-8">
               {filteredArtworks.length}개 작품
             </p>
           )}
 
-          {/* Skeleton Loading */}
           {isLoading ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-1">
               {Array.from({ length: 8 }).map((_, i) => (
                 <SkeletonCard key={i} />
               ))}
             </div>
           ) : filteredArtworks.length > 0 ? (
-            /* Artworks Grid — 4 columns desktop, 2 columns mobile */
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-1">
               {filteredArtworks.map((artwork) => (
                 <ArtworkCard
                   key={artwork.id}
@@ -230,7 +209,6 @@ export default function LocalWorld() {
               ))}
             </div>
           ) : (
-            /* Empty State */
             <div className="flex flex-col items-center justify-center py-32 text-center">
               <div className="w-16 h-16 rounded-full bg-[#93C5FD]/10 flex items-center justify-center mb-6">
                 <Layers className="w-7 h-7 text-[#93C5FD]/50" />
@@ -250,31 +228,25 @@ export default function LocalWorld() {
         </div>
       </section>
 
-      {/* ─── CTA Section ─── */}
-      <section className="py-36 px-12 md:px-20 bg-[#0f0f0f] border-t border-white/5">
+      <section className="py-36 px-12 md:px-20 bg-[#030303] border-t border-white/5 relative z-10">
         <div className="max-w-3xl">
-          <p className="font-accent text-xs tracking-[0.3em] text-[#93C5FD] mb-6">
+          <p className="font-accent text-[10px] tracking-[0.6em] text-[#93C5FD] mb-6">
             CONTACT
           </p>
-          <h2 className="text-display text-[3rem] md:text-[4rem] leading-tight text-white mb-8">
-            공간에 생명을 불어넣는 빛
+          <h2 className="text-display font-light text-[3rem] md:text-[3.5rem] leading-tight text-[#e0e0e0] mb-8">
+            공간에 숨결을 더하는 빛
           </h2>
-          <p className="text-lg text-gray-400 mb-12 leading-relaxed max-w-xl">
-            LUMOS LOCAL은 카페, 레스토랑, 호텔, 상업 공간을 위한
-            한국적 정서가 담긴 미디어아트 콘텐츠를 제공합니다.
+          <p className="text-lg text-[#aaaaaa] font-light mb-12 leading-[2] max-w-xl tracking-wide">
+            LUMOS LOCAL은 카페, 레스토랑, 호텔, 상업 공간을 위한 감성형 미디어아트 컬렉션입니다.
           </p>
-          <button
-            onClick={handleContactClick}
-            className="btn-brutalist-blue"
-          >
+          <button onClick={handleContactClick} className="btn-brutalist-blue">
             Contact Us
           </button>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-12 px-12 md:px-20 border-t border-white/5 bg-[#0a0a0a]">
-        <div className="max-w-screen-xl mx-auto flex items-center justify-between">
+      <footer className="py-12 px-8 md:px-12 border-t border-white/5 bg-[#030303] relative z-10">
+        <div className="w-full flex items-center justify-between">
           <img
             src="/assets/lumos-logo.png"
             alt="LUMOS"
@@ -289,7 +261,7 @@ export default function LocalWorld() {
             >
               thisglobal.kr
             </a>
-            <p className="text-xs text-gray-700 mt-1">© 2023 디스글로벌. All rights reserved.</p>
+            <p className="text-xs text-gray-700 mt-1">© 2026 THISGLOBAL. All rights reserved.</p>
           </div>
         </div>
       </footer>
